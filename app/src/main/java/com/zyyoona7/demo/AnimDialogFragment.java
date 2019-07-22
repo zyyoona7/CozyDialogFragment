@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ExternalAlertDialog;
 
-import com.zyyoona7.easydialogfragment.base.BaseAnimDialogFragment;
+import com.zyyoona7.easydfrag.base.BaseAnimDialogFragment;
 
 public class AnimDialogFragment extends BaseAnimDialogFragment {
 

@@ -7,7 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 
-import com.zyyoona7.easydialogfragment.base.BaseDialogFragment;
+import com.zyyoona7.easydfrag.base.BaseDialogFragment;
 
 public class NormalDialogFragment extends BaseDialogFragment {
 
