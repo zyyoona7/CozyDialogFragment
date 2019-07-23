@@ -6,6 +6,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 
+/**
+ * The helper class of ITouchOutsideDialog
+ *
+ * @author zyyoona7
+ */
 public class TouchOutsideHelper {
 
     private boolean mCancelable;

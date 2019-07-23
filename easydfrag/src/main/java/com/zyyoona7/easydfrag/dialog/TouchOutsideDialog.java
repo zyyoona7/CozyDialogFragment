@@ -6,6 +6,11 @@ import android.view.MotionEvent;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDialog;
 
+/**
+ * custom Dialog for BaseAnimDialogFragment.
+ *
+ * @author zyyoona7
+ */
 public class TouchOutsideDialog extends AppCompatDialog implements ITouchOutsideDialog {
 
     private final TouchOutsideHelper mTouchOutsideHelper;

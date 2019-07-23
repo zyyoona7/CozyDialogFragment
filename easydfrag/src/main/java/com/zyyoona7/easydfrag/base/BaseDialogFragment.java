@@ -2,7 +2,6 @@ package com.zyyoona7.easydfrag.base;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -22,6 +21,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * base DialogFragment
+ *
+ * @author zyyoona7
+ */
 public class BaseDialogFragment extends ExternalDialogFragment {
 
     private static final String TAG = "BaseDialogFragment";
@@ -50,7 +54,7 @@ public class BaseDialogFragment extends ExternalDialogFragment {
     private int mAnimationStyle = 0;
 
     //点击外部是否可取消
-    private boolean mCancelOnTouchOutside = true;
+    private boolean mCanceledOnTouchOutside = true;
 
     //DialogFragment id
     private int mRequestId;
@@ -84,7 +88,7 @@ public class BaseDialogFragment extends ExternalDialogFragment {
             mKeyboardEnable = savedInstanceState.getBoolean(SAVED_KEYBOARD_ENABLE, true);
             mSoftInputMode = savedInstanceState.getInt(SAVED_SOFT_INPUT_MODE,
                     WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-            mCancelOnTouchOutside = savedInstanceState.getBoolean(SAVED_CANCEL_ON_TOUCH_OUTSIDE,
+            mCanceledOnTouchOutside = savedInstanceState.getBoolean(SAVED_CANCEL_ON_TOUCH_OUTSIDE,
                     true);
             mAnimationStyle = savedInstanceState.getInt(SAVED_ANIMATION_STYLE, 0);
         }
@@ -104,13 +108,13 @@ public class BaseDialogFragment extends ExternalDialogFragment {
         outState.putInt(SAVED_HEIGHT, mHeight);
         outState.putBoolean(SAVED_KEYBOARD_ENABLE, mKeyboardEnable);
         outState.putInt(SAVED_SOFT_INPUT_MODE, mSoftInputMode);
-        outState.putBoolean(SAVED_CANCEL_ON_TOUCH_OUTSIDE, mCancelOnTouchOutside);
+        outState.putBoolean(SAVED_CANCEL_ON_TOUCH_OUTSIDE, mCanceledOnTouchOutside);
         outState.putInt(SAVED_ANIMATION_STYLE, mAnimationStyle);
         super.onSaveInstanceState(outState);
     }
 
     /**
-     * 设置 arguments 带有 id，可以通过 {@link BaseDialogFragment#getRequestId()} 获取到
+     * Sets bundle with requestId, Can use by {@link BaseDialogFragment#getRequestId()}
      *
      * @param args      args
      * @param requestId id
@@ -123,14 +127,11 @@ public class BaseDialogFragment extends ExternalDialogFragment {
         setArguments(args);
     }
 
+    /**
+     * @return requestId of you set
+     */
     public int getRequestId() {
         return mRequestId;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        Log.d(TAG, "onStart: ");
     }
 
     @Override
@@ -141,8 +142,8 @@ public class BaseDialogFragment extends ExternalDialogFragment {
                 || getDialog().getWindow() == null) {
             return;
         }
-        Log.d(TAG, "onActivityCreated: ");
         Window window = getDialog().getWindow();
+        //set WindowManager LayoutParams
         WindowManager.LayoutParams layoutParams = window.getAttributes();
         layoutParams.dimAmount = mDimAmount;
         layoutParams.gravity = mGravity;
@@ -162,90 +163,172 @@ public class BaseDialogFragment extends ExternalDialogFragment {
             window.setSoftInputMode(mSoftInputMode);
         }
         if (isCancelable()) {
-            getDialog().setCanceledOnTouchOutside(mCancelOnTouchOutside);
+            getDialog().setCanceledOnTouchOutside(mCanceledOnTouchOutside);
         }
     }
 
-    public boolean isCancelOnTouchOutside() {
-        return mCancelOnTouchOutside;
+    /**
+     * @return Whether the dialog should be canceled when
+     * touched outside the window.
+     */
+    public boolean isCanceledOnTouchOutside() {
+        return mCanceledOnTouchOutside;
     }
 
-    public void setCancelOnTouchOutside(boolean cancelOnTouchOutside) {
-        mCancelOnTouchOutside = cancelOnTouchOutside;
+    /**
+     * Sets whether this dialog is canceled when touched outside the window's
+     * bounds.
+     *
+     * @param canceledOnTouchOutside Whether the dialog should be canceled when
+     *                               touched outside the window.
+     */
+    public void setCanceledOnTouchOutside(boolean canceledOnTouchOutside) {
+        mCanceledOnTouchOutside = canceledOnTouchOutside;
     }
 
+    /**
+     * @return window dim amount
+     */
     public float getDimAmount() {
         return mDimAmount;
     }
 
-    public void setDimAmount(@FloatRange(from = 0f,to = 1f) float dimAmount) {
+    /**
+     * Sets window dim amount when dialog show.
+     *
+     * @param dimAmount dim amount
+     */
+    public void setDimAmount(@FloatRange(from = 0f, to = 1f) float dimAmount) {
         mDimAmount = dimAmount;
     }
 
+    /**
+     * @return DialogFragment content already set width
+     */
     public int getWidth() {
         return mWidth;
     }
 
+    /**
+     * Sets DialogFragment content width
+     *
+     * @param width DialogFragment content height you want set
+     */
     public void setWidth(int width) {
         mWidth = width;
     }
 
+    /**
+     * Sets DialogFragment content width MATCH_PARENT.
+     */
     public void setFullWidth() {
         mWidth = ViewGroup.LayoutParams.MATCH_PARENT;
     }
 
+    /**
+     * Sets DialogFragment content width WRAP_CONTENT
+     */
     public void setWrapWidth() {
-        mWidth = ViewGroup.LayoutParams.MATCH_PARENT;
+        mWidth = ViewGroup.LayoutParams.WRAP_CONTENT;
     }
 
+    /**
+     * @return DialogFragment content already set height
+     */
     public int getHeight() {
         return mHeight;
     }
 
+    /**
+     * Sets DialogFragment content height.
+     *
+     * @param height DialogFragment content height you want set
+     */
     public void setHeight(int height) {
         mHeight = height;
     }
 
+    /**
+     * Sets DialogFragment content height MATCH_PARENT.
+     */
     public void setFullHeight() {
         mHeight = ViewGroup.LayoutParams.MATCH_PARENT;
     }
 
+    /**
+     * Sets DialogFragment content height WRAP_CONTENT.
+     */
     public void setWrapHeight() {
         mHeight = ViewGroup.LayoutParams.WRAP_CONTENT;
     }
 
+    /**
+     * @return Whether keyboard enabled.
+     */
     public boolean isKeyboardEnable() {
         return mKeyboardEnable;
     }
 
+    /**
+     * Sets keyboard enabled
+     *
+     * @param keyboardEnable Whether keyboard enabled.
+     */
     public void setKeyboardEnable(boolean keyboardEnable) {
         mKeyboardEnable = keyboardEnable;
     }
 
+    /**
+     * @return window soft input mode.
+     */
     public int getSoftInputMode() {
         return mSoftInputMode;
     }
 
+    /**
+     * Sets soft input mode for Window.
+     *
+     * @param softInputMode soft input mode
+     */
     public void setSoftInputMode(int softInputMode) {
         mSoftInputMode = softInputMode;
     }
 
+    /**
+     * @return Window content gravity
+     */
     public int getGravity() {
         return mGravity;
     }
 
+    /**
+     * Sets Window content gravity.
+     *
+     * @param gravity Window content gravity
+     */
     public void setGravity(int gravity) {
         mGravity = gravity;
     }
 
+    /**
+     * Sets Window content gravity bottom.
+     */
     public void setBottomGravity() {
         mGravity = Gravity.BOTTOM;
     }
 
+    /**
+     * @return Window animation style
+     */
     public int getAnimationStyle() {
         return mAnimationStyle;
     }
 
+    /**
+     * Sets Window animation style
+     *
+     * @param animationStyle Window animation style
+     */
     public void setAnimationStyle(@StyleRes int animationStyle) {
         mAnimationStyle = animationStyle;
     }

@@ -25,7 +25,12 @@ import com.zyyoona7.easydfrag.dialog.ITouchOutsideDialog;
 import com.zyyoona7.easydfrag.dialog.OnTouchOutsideListener;
 import com.zyyoona7.easydfrag.dialog.TouchOutsideDialog;
 
-public class BaseAnimDialogFragment extends BaseDialogFragment
+/**
+ * custom show/dismiss animation by Animator
+ *
+ * @author zyyoona7
+ */
+public abstract class BaseAnimDialogFragment extends BaseDialogFragment
         implements DialogInterface.OnShowListener, OnTouchOutsideListener {
 
     private static final String SAVED_SHOW_DURATION = "SAVED_SHOW_DURATION";
@@ -158,14 +163,25 @@ public class BaseAnimDialogFragment extends BaseDialogFragment
         dismissWithAnimator(false);
     }
 
+    /**
+     * call dismissAllowingStateLoss super method
+     */
     private void superDismissAllowingStateLoss() {
         super.dismissAllowingStateLoss();
     }
 
+    /**
+     * call dismiss super method
+     */
     private void superDismiss() {
         super.dismiss();
     }
 
+    /**
+     * dismiss DialogFragment when custom dismiss Animator end
+     *
+     * @param stateLoss AllowingStateLoss
+     */
     private void dismissWithAnimator(final boolean stateLoss) {
         if (mDismissAnimator == null) {
             if (getDialog() != null && getDialog().getWindow() != null) {
@@ -213,6 +229,11 @@ public class BaseAnimDialogFragment extends BaseDialogFragment
         mDismissAnimator.start();
     }
 
+    /**
+     * custom dim for sync custom animator
+     *
+     * @param alpha dim initial value
+     */
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     private void applyDim(int alpha) {
         if (mActivity == null) {
@@ -240,6 +261,9 @@ public class BaseAnimDialogFragment extends BaseDialogFragment
         }
     }
 
+    /**
+     * clear dim
+     */
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     private void clearDim() {
         if (mActivity == null) {
@@ -272,11 +296,21 @@ public class BaseAnimDialogFragment extends BaseDialogFragment
         }
     }
 
+    /**
+     * override this method can custom dim drawable
+     *
+     * @return dim drawable
+     */
     @Nullable
     protected Drawable onCreateDimDrawable() {
         return null;
     }
 
+    /**
+     * create dim animation
+     *
+     * @return dim animation
+     */
     @NonNull
     private ObjectAnimator onCreateDimAnimator() {
         initDimDrawableIfNull();
@@ -286,32 +320,65 @@ public class BaseAnimDialogFragment extends BaseDialogFragment
         return animator;
     }
 
+    /**
+     * create show animation used to DialogFragment show
+     *
+     * @param targetView Window content view
+     * @return show animation
+     */
     @Nullable
-    protected Animator onCreateShowAnimator(View targetView) {
-        return null;
-    }
+    protected abstract Animator onCreateShowAnimator(View targetView);
 
+    /**
+     * create dismiss animation used to DialogFragment dismiss
+     *
+     * @param targetView Window content view
+     * @return dismiss animation
+     */
     @Nullable
-    protected Animator onCreateDismissAnimator(View targetView) {
-        return null;
-    }
+    protected abstract Animator onCreateDismissAnimator(View targetView);
 
+    /**
+     * Sets show animation duration
+     *
+     * @param showDuration animation duration
+     */
     public void setShowDuration(int showDuration) {
         mShowDuration = showDuration;
     }
 
+    /**
+     * Sets dim animation duration used to DialogFragment show
+     *
+     * @param dimShowDuration animation duration
+     */
     public void setDimShowDuration(int dimShowDuration) {
         mDimShowDuration = dimShowDuration;
     }
 
+    /**
+     * Sets dismiss animation duration
+     *
+     * @param dismissDuration dismiss animation duration
+     */
     public void setDismissDuration(int dismissDuration) {
         mDismissDuration = dismissDuration;
     }
 
+    /**
+     * Sets dim animation duration used to DialogFragment dismiss
+     *
+     * @param dimDismissDuration animation duration
+     */
     public void setDimDismissDuration(int dimDismissDuration) {
         mDimDismissDuration = dimDismissDuration;
     }
 
+    /**
+     * Sets dim color
+     *
+     * @param dimColor dim color
+     */
     public void setDimColor(int dimColor) {
         mDimColor = dimColor;
     }
