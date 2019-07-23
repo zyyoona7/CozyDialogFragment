@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
  * 等一系列方法
  *
  * @author zyyoona7
- * @since 2019/06/05
+ * @since 2019/07/22
  */
 public class ExternalDialogFragment extends DialogFragment {
 
@@ -160,11 +160,17 @@ public class ExternalDialogFragment extends DialogFragment {
         super.dismissAllowingStateLoss();
     }
 
+    @Override
+    protected void dismissInternal(boolean allowStateLoss) {
+        super.dismissInternal(allowStateLoss);
+    }
+
     /**
      * 获取简单的 Tag
      *
      * @return simple name for tag
      */
+    @NonNull
     public String getSimpleTag() {
         return this.getClass().getSimpleName();
     }

@@ -21,70 +21,89 @@ import androidx.annotation.RestrictTo;
 import androidx.annotation.StringRes;
 import androidx.annotation.StyleRes;
 
-import com.zyyoona7.easydfrag.dialog.ITouchOutsideDialog;
-import com.zyyoona7.easydfrag.dialog.OnTouchOutsideListener;
-import com.zyyoona7.easydfrag.dialog.TouchOutsideHelper;
+import com.zyyoona7.easydfrag.dialog.AnimDialogHelper;
+import com.zyyoona7.easydfrag.dialog.IAnimDialog;
+import com.zyyoona7.easydfrag.dialog.OnAnimInterceptCallback;
 
 import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP;
 
-public class ExternalAlertDialog extends AlertDialog implements ITouchOutsideDialog {
+/**
+ * AlertDialog for custom DialogFragment animation
+ *
+ * @author zyyoona7
+ * @since 2019/07/22
+ */
+public class AnimAlertDialog extends AlertDialog implements IAnimDialog {
 
-    private final TouchOutsideHelper mTouchOutsideHelper;
+    private final AnimDialogHelper mAnimDialogHelper;
 
-    protected ExternalAlertDialog(@NonNull Context context) {
+    protected AnimAlertDialog(@NonNull Context context) {
         super(context);
-        mTouchOutsideHelper = new TouchOutsideHelper(this);
+        mAnimDialogHelper = new AnimDialogHelper(this);
     }
 
-    protected ExternalAlertDialog(@NonNull Context context, int themeResId) {
+    protected AnimAlertDialog(@NonNull Context context, int themeResId) {
         super(context, themeResId);
-        mTouchOutsideHelper = new TouchOutsideHelper(this);
+        mAnimDialogHelper = new AnimDialogHelper(this);
     }
 
-    protected ExternalAlertDialog(@NonNull Context context, boolean cancelable, @Nullable OnCancelListener cancelListener) {
+    protected AnimAlertDialog(@NonNull Context context, boolean cancelable, @Nullable OnCancelListener cancelListener) {
         super(context, cancelable, cancelListener);
-        mTouchOutsideHelper = new TouchOutsideHelper(this);
+        mAnimDialogHelper = new AnimDialogHelper(this);
     }
 
     @Override
     public void setCancelable(boolean flag) {
-        mTouchOutsideHelper.setCancelable(flag);
+        mAnimDialogHelper.setCancelable(flag);
         super.setCancelable(flag);
     }
 
     @Override
     public void setCanceledOnTouchOutside(boolean cancel) {
-        mTouchOutsideHelper.setCanceledOnTouchOutside(cancel);
+        mAnimDialogHelper.setCanceledOnTouchOutside(cancel);
         super.setCanceledOnTouchOutside(cancel);
     }
 
     @Override
-    public void setOnTouchOutsideListener(OnTouchOutsideListener listener) {
-        mTouchOutsideHelper.setOnTouchOutsideListener(listener);
+    public void setDismissByDf(boolean dismissByDf) {
+        mAnimDialogHelper.setDismissByDf(dismissByDf);
+    }
+
+    @Override
+    public void setOnAnimInterceptCallback(OnAnimInterceptCallback listener) {
+        mAnimDialogHelper.setOnAnimInterceptCallback(listener);
     }
 
     @Override
     public boolean onTouchEvent(@NonNull MotionEvent event) {
-        if (mTouchOutsideHelper.isIntercept()) {
-            return mTouchOutsideHelper.onTouchEvent(event);
+        if (mAnimDialogHelper.isIntercept()) {
+            return mAnimDialogHelper.onTouchEvent(event);
         }
         return super.onTouchEvent(event);
     }
 
     @Override
     public void onBackPressed() {
-        if (mTouchOutsideHelper.isIntercept()) {
-            mTouchOutsideHelper.onBackPress();
+        if (mAnimDialogHelper.isIntercept()) {
+            mAnimDialogHelper.onBackPress();
             return;
         }
         super.onBackPressed();
     }
 
     @Override
+    public void dismiss() {
+        if (mAnimDialogHelper.onDismissInternal()) {
+            return;
+        }
+        super.dismiss();
+    }
+
+    @Override
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        if (mTouchOutsideHelper != null) {
-            mTouchOutsideHelper.onDetachFromWindow();
+        if (mAnimDialogHelper != null) {
+            mAnimDialogHelper.onDetachFromWindow();
         }
     }
 
@@ -764,7 +783,7 @@ public class ExternalAlertDialog extends AlertDialog implements ITouchOutsideDia
         public AlertDialog create() {
             // We can't use Dialog's 3-arg constructor with the createThemeContextWrapper param,
             // so we always have to re-set the theme
-            final ExternalAlertDialog dialog = new ExternalAlertDialog(P.mContext, mTheme);
+            final AnimAlertDialog dialog = new AnimAlertDialog(P.mContext, mTheme);
             P.apply(dialog.mAlert);
             dialog.setCancelable(P.mCancelable);
             if (P.mCancelable) {

@@ -21,17 +21,18 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
-import com.zyyoona7.easydfrag.dialog.ITouchOutsideDialog;
-import com.zyyoona7.easydfrag.dialog.OnTouchOutsideListener;
-import com.zyyoona7.easydfrag.dialog.TouchOutsideDialog;
+import com.zyyoona7.easydfrag.dialog.AnimDialog;
+import com.zyyoona7.easydfrag.dialog.IAnimDialog;
+import com.zyyoona7.easydfrag.dialog.OnAnimInterceptCallback;
 
 /**
  * custom show/dismiss animation by Animator
  *
  * @author zyyoona7
+ * @since 2019/07/22
  */
 public abstract class BaseAnimDialogFragment extends BaseDialogFragment
-        implements DialogInterface.OnShowListener, OnTouchOutsideListener {
+        implements DialogInterface.OnShowListener, OnAnimInterceptCallback {
 
     private static final String SAVED_SHOW_DURATION = "SAVED_SHOW_DURATION";
     private static final String SAVED_DISMISS_DURATION = "SAVED_DISMISS_DURATION";
@@ -75,7 +76,7 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        return new TouchOutsideDialog(getContext());
+        return new AnimDialog(getContext());
     }
 
     @Override
@@ -87,12 +88,12 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
             return;
         }
         getDialog().setOnShowListener(this);
-        if (getDialog() instanceof ITouchOutsideDialog) {
-            ((ITouchOutsideDialog) getDialog()).setOnTouchOutsideListener(this);
+        if (getDialog() instanceof IAnimDialog) {
+            ((IAnimDialog) getDialog()).setOnAnimInterceptCallback(this);
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
             getDialog().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-            clearDim();
+            removeDim();
 
             //状态恢复，直接设置阴影，需通过 post 方法否则可能不起作用
             if (savedInstanceState != null) {
@@ -154,6 +155,11 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
     }
 
     @Override
+    public void onDismissInternal() {
+        dismissAllowingStateLoss();
+    }
+
+    @Override
     public void dismissAllowingStateLoss() {
         dismissWithAnimator(true);
     }
@@ -161,6 +167,19 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
     @Override
     public void dismiss() {
         dismissWithAnimator(false);
+    }
+
+    @Override
+    protected void dismissInternal(boolean allowStateLoss) {
+        //AlertDialog internal will dismiss dialog when click buttons.
+        //we need intercept it.
+        if (getDialog() instanceof IAnimDialog) {
+            ((IAnimDialog) getDialog()).setDismissByDf(true);
+        }
+        super.dismissInternal(allowStateLoss);
+        if (getDialog() instanceof IAnimDialog) {
+            ((IAnimDialog) getDialog()).setDismissByDf(false);
+        }
     }
 
     /**
@@ -196,12 +215,7 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
                         } else {
                             superDismiss();
                         }
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                            if (mDimAnimator != null) {
-                                mDimAnimator.cancel();
-                            }
-                            clearDim();
-                        }
+                        safeRemoveDim();
                     }
                 });
             }
@@ -212,6 +226,7 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
             } else {
                 superDismiss();
             }
+            safeRemoveDim();
             return;
         }
 
@@ -229,6 +244,12 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
         mDismissAnimator.start();
     }
 
+    private void safeRemoveDim() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            removeDim();
+        }
+    }
+
     /**
      * custom dim for sync custom animator
      *
@@ -239,15 +260,14 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
         if (mActivity == null) {
             return;
         }
-
         initDimDrawableIfNull();
 
         mDimDrawable.setAlpha(alpha);
-        ViewGroup rootView = (ViewGroup) mActivity.getWindow().getDecorView().getRootView();
+        ViewGroup rootView = (ViewGroup) mActivity.getWindow()
+                .getDecorView().getRootView();
         mDimDrawable.setBounds(0, 0, rootView.getWidth(), rootView.getHeight());
         ViewGroupOverlay overlay = rootView.getOverlay();
-        //先clear再添加
-        overlay.clear();
+        overlay.remove(mDimDrawable);
         overlay.add(mDimDrawable);
     }
 
@@ -265,13 +285,15 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
      * clear dim
      */
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
-    private void clearDim() {
-        if (mActivity == null) {
+    private void removeDim() {
+        if (mActivity == null || mDimDrawable == null) {
             return;
         }
-        ViewGroup rootView = (ViewGroup) mActivity.getWindow().getDecorView().getRootView();
+        ViewGroup rootView = (ViewGroup) mActivity.getWindow()
+                .getDecorView().getRootView();
         ViewGroupOverlay overlay = rootView.getOverlay();
-        overlay.clear();
+        overlay.remove(mDimDrawable);
+        mDimDrawable = null;
     }
 
     @Override
@@ -291,9 +313,7 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
             mDismissAnimator.cancel();
             mDismissAnimator = null;
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            clearDim();
-        }
+        safeRemoveDim();
     }
 
     /**

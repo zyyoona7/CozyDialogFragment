@@ -4,53 +4,72 @@ import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ExternalAlertDialog;
+import androidx.appcompat.app.AnimAlertDialog;
 
 import com.zyyoona7.easydfrag.base.BaseAnimDialogFragment;
 
 public class AnimDialogFragment extends BaseAnimDialogFragment {
 
-    public static AnimDialogFragment newInstance() {
-        
+    private View.OnClickListener mOkClickListener;
+
+    public static AnimDialogFragment newInstance(){
+        return newInstance(-1);
+    }
+
+    public static AnimDialogFragment newInstance(int requestId) {
+
         Bundle args = new Bundle();
-        
+
         AnimDialogFragment fragment = new AnimDialogFragment();
-        fragment.setArguments(args);
+        fragment.setArguments(args,requestId);
         return fragment;
     }
-    
+
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        ExternalAlertDialog.Builder builder = new ExternalAlertDialog.Builder(getContext());
+        AnimAlertDialog.Builder builder = new AnimAlertDialog.Builder(mActivity);
         builder.setTitle("Anim");
-        builder.setMessage("Anim Dialog");
+        builder.setMessage("Anim Dialog"+getRequestId());
+        builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (mOkClickListener != null) {
+                    mOkClickListener.onClick(null);
+                }
+            }
+        });
         return builder.create();
     }
 
     @Override
     protected Animator onCreateShowAnimator(View targetView) {
-        PropertyValuesHolder holder1=PropertyValuesHolder.ofFloat("scaleX",0.5f,1f);
-        PropertyValuesHolder holder2=PropertyValuesHolder.ofFloat("scaleY",0.5f,1f);
-        PropertyValuesHolder holder3=PropertyValuesHolder.ofFloat("alpha",0f,1f);
-        ObjectAnimator animator=ObjectAnimator
-                .ofPropertyValuesHolder(targetView,holder1,holder2,holder3);
+        PropertyValuesHolder holder1 = PropertyValuesHolder.ofFloat("scaleX", 0.5f, 1f);
+        PropertyValuesHolder holder2 = PropertyValuesHolder.ofFloat("scaleY", 0.5f, 1f);
+        PropertyValuesHolder holder3 = PropertyValuesHolder.ofFloat("alpha", 0f, 1f);
+        ObjectAnimator animator = ObjectAnimator
+                .ofPropertyValuesHolder(targetView, holder1, holder2, holder3);
         animator.setInterpolator(new OvershootInterpolator());
         return animator;
     }
 
     @Override
     protected Animator onCreateDismissAnimator(View targetView) {
-        PropertyValuesHolder holder1=PropertyValuesHolder.ofFloat("scaleX",1f,0.5f);
-        PropertyValuesHolder holder2=PropertyValuesHolder.ofFloat("scaleY",1f,0.5f);
-        PropertyValuesHolder holder3=PropertyValuesHolder.ofFloat("alpha",1f,0f);
+        PropertyValuesHolder holder1 = PropertyValuesHolder.ofFloat("scaleX", 1f, 0.5f);
+        PropertyValuesHolder holder2 = PropertyValuesHolder.ofFloat("scaleY", 1f, 0.5f);
+        PropertyValuesHolder holder3 = PropertyValuesHolder.ofFloat("alpha", 1f, 0f);
         return ObjectAnimator
-                .ofPropertyValuesHolder(targetView,holder1,holder2,holder3);
+                .ofPropertyValuesHolder(targetView, holder1, holder2, holder3);
+    }
+
+    public void setOkClickListener(View.OnClickListener listener) {
+        mOkClickListener = listener;
     }
 }

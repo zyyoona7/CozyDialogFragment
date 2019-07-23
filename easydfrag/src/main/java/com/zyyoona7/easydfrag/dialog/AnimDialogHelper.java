@@ -7,18 +7,20 @@ import android.view.View;
 import android.view.ViewConfiguration;
 
 /**
- * The helper class of ITouchOutsideDialog
+ * The helper class of IAnimDialog
  *
  * @author zyyoona7
+ * @since 2019/07/22
  */
-public class TouchOutsideHelper {
+public class AnimDialogHelper {
 
     private boolean mCancelable;
     private boolean mCanceledOnTouchOutside;
     private Dialog mDialog;
-    private OnTouchOutsideListener mOnTouchOutsideListener;
+    private OnAnimInterceptCallback mOnAnimInterceptCallback;
+    private boolean mDismissByDf;
 
-    public TouchOutsideHelper(Dialog dialog) {
+    public AnimDialogHelper(Dialog dialog) {
         mDialog = dialog;
     }
 
@@ -38,8 +40,8 @@ public class TouchOutsideHelper {
         }
         boolean consume = mCancelable && mCanceledOnTouchOutside && mDialog.isShowing()
                 && shouldCloseOnTouch(mDialog.getContext(), event);
-        if (consume && mOnTouchOutsideListener != null) {
-            mOnTouchOutsideListener.onTouchOutside(event);
+        if (consume && mOnAnimInterceptCallback != null) {
+            mOnAnimInterceptCallback.onTouchOutside(event);
         }
         return consume;
     }
@@ -68,21 +70,33 @@ public class TouchOutsideHelper {
     }
 
     public void onBackPress() {
-        if (mCancelable && mOnTouchOutsideListener != null) {
-            mOnTouchOutsideListener.onBackPress();
+        if (mCancelable && mOnAnimInterceptCallback != null) {
+            mOnAnimInterceptCallback.onBackPress();
         }
     }
 
-    public boolean isIntercept() {
-        return mOnTouchOutsideListener != null;
+    public boolean onDismissInternal() {
+        boolean consume = !mDismissByDf && mOnAnimInterceptCallback != null;
+        if (consume) {
+            mOnAnimInterceptCallback.onDismissInternal();
+        }
+        return consume;
     }
 
-    public void setOnTouchOutsideListener(OnTouchOutsideListener listener) {
-        mOnTouchOutsideListener = listener;
+    public boolean isIntercept() {
+        return mOnAnimInterceptCallback != null;
+    }
+
+    public void setOnAnimInterceptCallback(OnAnimInterceptCallback listener) {
+        mOnAnimInterceptCallback = listener;
+    }
+
+    public void setDismissByDf(boolean dismissByDf) {
+        mDismissByDf = dismissByDf;
     }
 
     public void onDetachFromWindow() {
         mDialog = null;
-        mOnTouchOutsideListener = null;
+        mOnAnimInterceptCallback = null;
     }
 }
