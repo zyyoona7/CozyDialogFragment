@@ -7,19 +7,19 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
-import android.view.animation.OvershootInterpolator;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AnimAlertDialog;
 
-import com.zyyoona7.easydfrag.base.BaseAnimDialogFragment;
+import com.zyyoona7.demo.interpolator.SpringInterpolator;
+import com.zyyoona7.easydfrag.base.BaseAnimatorDialogFragment;
 
-public class AnimDialogFragment extends BaseAnimDialogFragment {
+public class AnimDialogFragment extends BaseAnimatorDialogFragment {
 
     private View.OnClickListener mOkClickListener;
 
-    public static AnimDialogFragment newInstance(){
+    public static AnimDialogFragment newInstance() {
         return newInstance(-1);
     }
 
@@ -28,7 +28,7 @@ public class AnimDialogFragment extends BaseAnimDialogFragment {
         Bundle args = new Bundle();
 
         AnimDialogFragment fragment = new AnimDialogFragment();
-        fragment.setArguments(args,requestId);
+        fragment.setArguments(args, requestId);
         return fragment;
     }
 
@@ -37,7 +37,7 @@ public class AnimDialogFragment extends BaseAnimDialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         AnimAlertDialog.Builder builder = new AnimAlertDialog.Builder(mActivity);
         builder.setTitle("Anim");
-        builder.setMessage("Anim Dialog"+getRequestId());
+        builder.setMessage("Anim Dialog" + getRequestId());
         builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -50,18 +50,18 @@ public class AnimDialogFragment extends BaseAnimDialogFragment {
     }
 
     @Override
-    protected Animator onCreateShowAnimator(View targetView) {
+    protected Animator onCreateShowAnimator(@NonNull View targetView) {
         PropertyValuesHolder holder1 = PropertyValuesHolder.ofFloat("scaleX", 0.5f, 1f);
         PropertyValuesHolder holder2 = PropertyValuesHolder.ofFloat("scaleY", 0.5f, 1f);
         PropertyValuesHolder holder3 = PropertyValuesHolder.ofFloat("alpha", 0f, 1f);
         ObjectAnimator animator = ObjectAnimator
                 .ofPropertyValuesHolder(targetView, holder1, holder2, holder3);
-        animator.setInterpolator(new OvershootInterpolator());
+        animator.setInterpolator(new SpringInterpolator(0.6f));
         return animator;
     }
 
     @Override
-    protected Animator onCreateDismissAnimator(View targetView) {
+    protected Animator onCreateDismissAnimator(@NonNull View targetView) {
         PropertyValuesHolder holder1 = PropertyValuesHolder.ofFloat("scaleX", 1f, 0.5f);
         PropertyValuesHolder holder2 = PropertyValuesHolder.ofFloat("scaleY", 1f, 0.5f);
         PropertyValuesHolder holder3 = PropertyValuesHolder.ofFloat("alpha", 1f, 0f);

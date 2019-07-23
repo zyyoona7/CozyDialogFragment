@@ -1,7 +1,5 @@
 package com.zyyoona7.easydfrag.base;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -26,7 +24,7 @@ import com.zyyoona7.easydfrag.dialog.IAnimDialog;
 import com.zyyoona7.easydfrag.dialog.OnAnimInterceptCallback;
 
 /**
- * custom show/dismiss animation by Animator
+ * custom show/dismiss animation
  *
  * @author zyyoona7
  * @since 2019/07/22
@@ -42,8 +40,7 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
 
     private Drawable mDimDrawable;
     private ObjectAnimator mDimAnimator;
-    private Animator mShowAnimator;
-    private Animator mDismissAnimator;
+
 
     private int mShowDuration = 250;
     private int mDismissDuration = 250;
@@ -116,32 +113,11 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
 
     @Override
     public void onShow(DialogInterface dialog) {
-        if (mShowAnimator == null) {
-            if (getDialog() != null && getDialog().getWindow() != null) {
-                mShowAnimator = onCreateShowAnimator(getDialog().getWindow().getDecorView());
-            }
-            if (mShowAnimator != null) {
-                mShowAnimator.addListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        super.onAnimationEnd(animation);
-                    }
-                });
-            }
+        if (getDialog() != null && getDialog().getWindow() != null) {
+            View targetView = getDialog().getWindow().getDecorView();
+            onCreateShowAnimation(targetView);
+            onStartShowAnimation(targetView);
         }
-        if (mShowAnimator == null) {
-            return;
-        }
-        mShowAnimator.setDuration(mShowDuration);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            applyDim(0);
-            mDimAnimator = onCreateDimAnimator();
-            int duration = mDimShowDuration > 0 && mDimShowDuration < mShowDuration
-                    ? mDimShowDuration : mShowDuration;
-            mDimAnimator.setDuration(duration);
-            mDimAnimator.start();
-        }
-        mShowAnimator.start();
     }
 
     @Override
@@ -161,12 +137,12 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
 
     @Override
     public void dismissAllowingStateLoss() {
-        dismissWithAnimator(true);
+        dismissWithAnimation(true);
     }
 
     @Override
     public void dismiss() {
-        dismissWithAnimator(false);
+        dismissWithAnimation(false);
     }
 
     @Override
@@ -196,41 +172,46 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
         super.dismiss();
     }
 
+    protected void superDismissInternal(boolean stateLoss) {
+        if (stateLoss) {
+            superDismissAllowingStateLoss();
+        } else {
+            superDismiss();
+        }
+        safeRemoveDim();
+    }
+
     /**
      * dismiss DialogFragment when custom dismiss Animator end
      *
      * @param stateLoss AllowingStateLoss
      */
-    private void dismissWithAnimator(final boolean stateLoss) {
-        if (mDismissAnimator == null) {
-            if (getDialog() != null && getDialog().getWindow() != null) {
-                mDismissAnimator = onCreateDismissAnimator(getDialog().getWindow().getDecorView());
-            }
-            if (mDismissAnimator != null) {
-                mDismissAnimator.addListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        if (stateLoss) {
-                            superDismissAllowingStateLoss();
-                        } else {
-                            superDismiss();
-                        }
-                        safeRemoveDim();
-                    }
-                });
-            }
+    private void dismissWithAnimation(final boolean stateLoss) {
+        if (getDialog() != null && getDialog().getWindow() != null) {
+            View targetView = getDialog().getWindow().getDecorView();
+            onCreateDismissAnimation(targetView, stateLoss);
+            onStartDismissAnimation(targetView, stateLoss);
         }
-        if (mDismissAnimator == null) {
-            if (stateLoss) {
-                superDismissAllowingStateLoss();
-            } else {
-                superDismiss();
-            }
-            safeRemoveDim();
-            return;
-        }
+    }
 
-        mDismissAnimator.setDuration(mDismissDuration);
+    /**
+     * start dim show animation when onStartShowAnimation execute.
+     */
+    protected void startDimShowAnimation() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            applyDim(0);
+            mDimAnimator = onCreateDimAnimator();
+            int duration = mDimShowDuration > 0 && mDimShowDuration < mShowDuration
+                    ? mDimShowDuration : mShowDuration;
+            mDimAnimator.setDuration(duration);
+            mDimAnimator.start();
+        }
+    }
+
+    /**
+     * start dim dismiss animation when onStartDismissAnimation execute.
+     */
+    protected void startDimDismissAnimation() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
             //重建后，Animator 会是 null
             if (mDimAnimator == null) {
@@ -241,7 +222,6 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
             mDimAnimator.setDuration(duration);
             mDimAnimator.reverse();
         }
-        mDismissAnimator.start();
     }
 
     private void safeRemoveDim() {
@@ -303,16 +283,6 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
             mDimAnimator.cancel();
             mDimAnimator = null;
         }
-
-        if (mShowAnimator != null) {
-            mShowAnimator.cancel();
-            mShowAnimator = null;
-        }
-
-        if (mDismissAnimator != null) {
-            mDismissAnimator.cancel();
-            mDismissAnimator = null;
-        }
         safeRemoveDim();
     }
 
@@ -344,19 +314,38 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
      * create show animation used to DialogFragment show
      *
      * @param targetView Window content view
-     * @return show animation
      */
-    @Nullable
-    protected abstract Animator onCreateShowAnimator(View targetView);
+    protected abstract void onCreateShowAnimation(@NonNull View targetView);
+
+    /**
+     * show animation start
+     *
+     * @param targetView Window content view
+     */
+    protected abstract void onStartShowAnimation(@NonNull View targetView);
 
     /**
      * create dismiss animation used to DialogFragment dismiss
      *
      * @param targetView Window content view
-     * @return dismiss animation
+     * @param stateLoss  whether allowing state loss
      */
-    @Nullable
-    protected abstract Animator onCreateDismissAnimator(View targetView);
+    protected abstract void onCreateDismissAnimation(@NonNull View targetView, boolean stateLoss);
+
+    /**
+     * dismiss animation start
+     *
+     * @param targetView Window content view
+     * @param stateLoss  whether allowing state loss
+     */
+    protected abstract void onStartDismissAnimation(@NonNull View targetView, boolean stateLoss);
+
+    /**
+     * @return show animation duration
+     */
+    public int getShowDuration() {
+        return mShowDuration;
+    }
 
     /**
      * Sets show animation duration
@@ -365,6 +354,13 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
      */
     public void setShowDuration(int showDuration) {
         mShowDuration = showDuration;
+    }
+
+    /**
+     * @return dim animation duration used to DialogFragment show
+     */
+    public int getDimShowDuration() {
+        return mDimShowDuration;
     }
 
     /**
@@ -377,12 +373,26 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
     }
 
     /**
+     * @return dismiss animation duration
+     */
+    public int getDismissDuration() {
+        return mDismissDuration;
+    }
+
+    /**
      * Sets dismiss animation duration
      *
      * @param dismissDuration dismiss animation duration
      */
     public void setDismissDuration(int dismissDuration) {
         mDismissDuration = dismissDuration;
+    }
+
+    /**
+     * @return dim animation duration used to DialogFragment dismiss
+     */
+    public int getDimDismissDuration() {
+        return mDimDismissDuration;
     }
 
     /**

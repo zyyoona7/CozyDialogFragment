@@ -20,15 +20,15 @@ public class MainActivity extends AppCompatActivity {
         demoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showAnimDialogFragment(1);
+//                showAnimDialogFragment(1);
                 showAnimDialogFragment(0);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        EasyUtils.dismissAllowingStateLoss(getSupportFragmentManager(),
-                                AnimDialogFragment.class,0);
-                    }
-                },3000);
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        EasyUtils.dismissAllowingStateLoss(getSupportFragmentManager(),
+//                                AnimDialogFragment.class,0);
+//                    }
+//                },3000);
             }
         });
         Button normalBtn = findViewById(R.id.btn_normal_dialog);
@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void showAnimDialogFragment(int requestId) {
         final AnimDialogFragment dialogFragment = AnimDialogFragment.newInstance(requestId);
-        dialogFragment.setShowDuration(300);
+        dialogFragment.setShowDuration(500);
         dialogFragment.setDimShowDuration(150);
         dialogFragment.setDismissDuration(300);
         dialogFragment.setDimAmount(0.5f);
