@@ -3,6 +3,7 @@ package com.zyyoona7.easydfrag.base;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
@@ -39,8 +40,11 @@ public class BaseDialogFragment extends ExternalDialogFragment {
     private static final String SAVED_SOFT_INPUT_MODE = "SAVED_SOFT_INPUT_MODE";
     private static final String SAVED_CANCEL_ON_TOUCH_OUTSIDE = "SAVED_CANCEL_ON_TOUCH_OUTSIDE";
     private static final String SAVED_ANIMATION_STYLE = "SAVED_ANIMATION_STYLE";
-
-    private static final String KEY_REQUEST_ID = "KEY_REQUEST_ID";
+    private static final String SAVED_REQUEST_ID = "SAVED_REQUEST_ID";
+    private static final String SAVED_PADDING_LEFT = "SAVED_PADDING_LEFT";
+    private static final String SAVED_PADDING_TOP = "SAVED_PADDING_TOP";
+    private static final String SAVED_PADDING_RIGHT = "SAVED_PADDING_RIGHT";
+    private static final String SAVED_PADDING_BOTTOM = "SAVED_PADDING_BOTTOM";
 
     protected FragmentActivity mActivity;
 
@@ -53,12 +57,15 @@ public class BaseDialogFragment extends ExternalDialogFragment {
     private int mSoftInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN;
     @StyleRes
     private int mAnimationStyle = 0;
-
     //点击外部是否可取消
     private boolean mCanceledOnTouchOutside = true;
+    private int mPaddingLeft = -1;
+    private int mPaddingTop = -1;
+    private int mPaddingRight = -1;
+    private int mPaddingBottom = -1;
 
     //DialogFragment id
-    private int mRequestId;
+    private int mRequestId = -1;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -80,7 +87,7 @@ public class BaseDialogFragment extends ExternalDialogFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //设置Style 透明背景，No Title
-        setStyle(AppCompatDialogFragment.STYLE_NORMAL, R.style.EasyDialogFragment);
+        setStyle(AppCompatDialogFragment.STYLE_NO_TITLE, R.style.EasyDialogFragment);
         if (savedInstanceState != null) {
             mDimAmount = savedInstanceState.getFloat(SAVED_DIM_AMOUNT, 0.5f);
             mGravity = savedInstanceState.getInt(SAVED_GRAVITY, Gravity.CENTER);
@@ -92,12 +99,11 @@ public class BaseDialogFragment extends ExternalDialogFragment {
             mCanceledOnTouchOutside = savedInstanceState.getBoolean(SAVED_CANCEL_ON_TOUCH_OUTSIDE,
                     true);
             mAnimationStyle = savedInstanceState.getInt(SAVED_ANIMATION_STYLE, 0);
-        }
-
-        if (getArguments() != null) {
-            mRequestId = getArguments().getInt(KEY_REQUEST_ID, -1);
-        } else {
-            mRequestId = -1;
+            mRequestId = savedInstanceState.getInt(SAVED_REQUEST_ID, -1);
+            mPaddingLeft = savedInstanceState.getInt(SAVED_PADDING_LEFT, -1);
+            mPaddingTop = savedInstanceState.getInt(SAVED_PADDING_TOP, -1);
+            mPaddingRight = savedInstanceState.getInt(SAVED_PADDING_RIGHT, -1);
+            mPaddingBottom = savedInstanceState.getInt(SAVED_PADDING_BOTTOM, -1);
         }
     }
 
@@ -111,28 +117,12 @@ public class BaseDialogFragment extends ExternalDialogFragment {
         outState.putInt(SAVED_SOFT_INPUT_MODE, mSoftInputMode);
         outState.putBoolean(SAVED_CANCEL_ON_TOUCH_OUTSIDE, mCanceledOnTouchOutside);
         outState.putInt(SAVED_ANIMATION_STYLE, mAnimationStyle);
+        outState.putInt(SAVED_REQUEST_ID, mRequestId);
+        outState.putInt(SAVED_PADDING_LEFT, mPaddingLeft);
+        outState.putInt(SAVED_PADDING_TOP, mPaddingTop);
+        outState.putInt(SAVED_PADDING_RIGHT, mPaddingRight);
+        outState.putInt(SAVED_PADDING_BOTTOM, mPaddingBottom);
         super.onSaveInstanceState(outState);
-    }
-
-    /**
-     * Sets bundle with requestId, Can use by {@link BaseDialogFragment#getRequestId()}
-     *
-     * @param args      args
-     * @param requestId id
-     */
-    public void setArguments(@Nullable Bundle args, int requestId) {
-        if (args == null) {
-            args = new Bundle();
-        }
-        args.putInt(KEY_REQUEST_ID, requestId);
-        setArguments(args);
-    }
-
-    /**
-     * @return requestId of you set
-     */
-    public int getRequestId() {
-        return mRequestId;
     }
 
     @Override
@@ -157,6 +147,12 @@ public class BaseDialogFragment extends ExternalDialogFragment {
             layoutParams.height = mHeight;
         }
 
+        View decor = window.getDecorView();
+        decor.setPadding(mPaddingLeft >= 0 ? mPaddingLeft : decor.getPaddingLeft(),
+                mPaddingTop >= 0 ? mPaddingTop : decor.getPaddingTop(),
+                mPaddingRight >= 0 ? mPaddingRight : decor.getPaddingRight(),
+                mPaddingBottom >= 0 ? mPaddingBottom : decor.getPaddingBottom());
+
         if (mAnimationStyle != 0) {
             window.setWindowAnimations(mAnimationStyle);
         }
@@ -166,6 +162,22 @@ public class BaseDialogFragment extends ExternalDialogFragment {
         if (isCancelable()) {
             getDialog().setCanceledOnTouchOutside(mCanceledOnTouchOutside);
         }
+    }
+
+    /**
+     * @return requestId of you set
+     */
+    public int getRequestId() {
+        return mRequestId;
+    }
+
+    /**
+     * Sets requestId for DialogFragment, Can use by {@link BaseDialogFragment#getRequestId()}
+     *
+     * @param requestId requestId
+     */
+    public void setRequestId(int requestId) {
+        mRequestId = requestId;
     }
 
     /**
@@ -261,6 +273,89 @@ public class BaseDialogFragment extends ExternalDialogFragment {
      */
     public void setWrapHeight() {
         mHeight = ViewGroup.LayoutParams.WRAP_CONTENT;
+    }
+
+    /**
+     * @return Window content view padding left
+     */
+    public int getPaddingLeft() {
+        return mPaddingLeft;
+    }
+
+    /**
+     * Sets Window content view padding left.
+     *
+     * @param paddingLeft Window content view padding left
+     */
+    public void setPaddingLeft(int paddingLeft) {
+        mPaddingLeft = paddingLeft;
+    }
+
+    /**
+     * @return Window content view padding top
+     */
+    public int getPaddingTop() {
+        return mPaddingTop;
+    }
+
+    /**
+     * Sets Window content view padding top.
+     *
+     * @param paddingTop Window content view padding top
+     */
+    public void setPaddingTop(int paddingTop) {
+        mPaddingTop = paddingTop;
+    }
+
+    public int getPaddingRight() {
+        return mPaddingRight;
+    }
+
+    /**
+     * Sets Window content view padding right.
+     *
+     * @param paddingRight Window content view padding right
+     */
+    public void setPaddingRight(int paddingRight) {
+        mPaddingRight = paddingRight;
+    }
+
+    /**
+     * @return Window content view padding bottom
+     */
+    public int getPaddingBottom() {
+        return mPaddingBottom;
+    }
+
+    /**
+     * Sets Window content view padding bottom.
+     *
+     * @param paddingBottom Window content view padding bottom
+     */
+    public void setPaddingBottom(int paddingBottom) {
+        mPaddingBottom = paddingBottom;
+    }
+
+    /**
+     * Both sets Window content view padding left and padding right.
+     *
+     * @param paddingLeft  padding left
+     * @param paddingRight padding right
+     */
+    public void setPaddingHorizontal(int paddingLeft, int paddingRight) {
+        mPaddingLeft = paddingLeft;
+        mPaddingRight = paddingRight;
+    }
+
+    /**
+     * Both sets Window content view padding top and padding right.
+     *
+     * @param paddingTop    padding top
+     * @param paddingBottom padding bottom
+     */
+    public void setPaddingVertical(int paddingTop, int paddingBottom) {
+        mPaddingTop = paddingTop;
+        mPaddingBottom = paddingBottom;
     }
 
     /**

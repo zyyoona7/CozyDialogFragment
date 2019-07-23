@@ -1,14 +1,12 @@
 package com.zyyoona7.demo;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 
-import com.zyyoona7.easydfrag.utils.EasyUtils;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -16,8 +14,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Button demoBtn = findViewById(R.id.btn_anim_dialog);
-        demoBtn.setOnClickListener(new View.OnClickListener() {
+        Button animBtn = findViewById(R.id.btn_anim_dialog);
+        animBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 //                showAnimDialogFragment(1);
@@ -38,25 +36,44 @@ public class MainActivity extends AppCompatActivity {
                 showNormalDialogFragment();
             }
         });
+
+        Button demoBtn=findViewById(R.id.btn_demo_dialog);
+        demoBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDemoDialogFragment();
+            }
+        });
     }
 
-    private void showAnimDialogFragment(){
+    private void showAnimDialogFragment() {
         showAnimDialogFragment(-1);
     }
 
     private void showAnimDialogFragment(int requestId) {
-        final AnimDialogFragment dialogFragment = AnimDialogFragment.newInstance(requestId);
-        dialogFragment.setShowDuration(500);
+        final AnimDialogFragment dialogFragment = AnimDialogFragment.newInstance();
+        dialogFragment.setShowDuration(1500);
         dialogFragment.setDimShowDuration(150);
         dialogFragment.setDismissDuration(300);
         dialogFragment.setDimAmount(0.5f);
+        dialogFragment.setRequestId(requestId);
         dialogFragment.setOkClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showAnimDialogFragment();
+                showAnimDialogFragment(1);
             }
         });
         dialogFragment.showAllowingStateLoss(getSupportFragmentManager());
+    }
+
+    private void showDemoDialogFragment(){
+        DemoDialogFragment demoDialogFragment=DemoDialogFragment.newInstance();
+        demoDialogFragment.setFullWidth();
+        demoDialogFragment.setHeight(200);
+        demoDialogFragment.setBottomGravity();
+        demoDialogFragment.setPaddingHorizontal(20,20);
+        demoDialogFragment.setPaddingBottom(20);
+        demoDialogFragment.showAllowingStateLoss(getSupportFragmentManager());
     }
 
     private void showNormalDialogFragment() {

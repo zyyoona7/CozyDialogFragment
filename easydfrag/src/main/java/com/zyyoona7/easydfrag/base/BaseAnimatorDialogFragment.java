@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
  * custom show/dismiss animation by Animator
  *
  * @author zyyoona7
- * @since 2019/07/22
+ * @since 2019/07/23
  */
 public abstract class BaseAnimatorDialogFragment extends BaseAnimDialogFragment {
 
@@ -56,11 +56,13 @@ public abstract class BaseAnimatorDialogFragment extends BaseAnimDialogFragment 
                 });
             }
         }
-
     }
 
     @Override
     protected void onStartDismissAnimation(@NonNull View targetView, boolean stateLoss) {
+        if (mShowAnimator != null && mShowAnimator.isRunning()) {
+            mShowAnimator.end();
+        }
         if (mDismissAnimator == null) {
             superDismissInternal(stateLoss);
             return;

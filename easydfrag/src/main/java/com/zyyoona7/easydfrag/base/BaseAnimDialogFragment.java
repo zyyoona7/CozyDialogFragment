@@ -23,6 +23,9 @@ import com.zyyoona7.easydfrag.dialog.AnimDialog;
 import com.zyyoona7.easydfrag.dialog.IAnimDialog;
 import com.zyyoona7.easydfrag.dialog.OnAnimInterceptCallback;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * custom show/dismiss animation
  *
@@ -41,12 +44,14 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
     private Drawable mDimDrawable;
     private ObjectAnimator mDimAnimator;
 
-
     private int mShowDuration = 250;
     private int mDismissDuration = 250;
     private int mDimShowDuration = -1;
     private int mDimDismissDuration = -1;
     private int mDimColor = Color.BLACK;
+
+    //runnable list execute on animation end
+    private List<Runnable> mDismissRunnables;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -73,7 +78,7 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        return new AnimDialog(getContext());
+        return new AnimDialog(getContext(),getTheme());
     }
 
     @Override
@@ -179,6 +184,31 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
             superDismiss();
         }
         safeRemoveDim();
+        //execute dismiss actions if not empty
+        if (mDismissRunnables != null) {
+            for (int i = 0; i < mDismissRunnables.size(); i++) {
+                Runnable runnable = mDismissRunnables.get(i);
+                if (runnable != null) {
+                    runnable.run();
+                }
+            }
+            mDismissRunnables.clear();
+        }
+    }
+
+    /**
+     * add action, they will execute when dismiss animation end.
+     *
+     * @param runnable runnable
+     */
+    protected void addAction(Runnable runnable) {
+        if (mDismissRunnables == null) {
+            mDismissRunnables = new ArrayList<>(1);
+        }
+        if (runnable == null) {
+            return;
+        }
+        mDismissRunnables.add(runnable);
     }
 
     /**
@@ -216,6 +246,10 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
             //重建后，Animator 会是 null
             if (mDimAnimator == null) {
                 mDimAnimator = onCreateDimAnimator();
+            }else {
+                if (mDimAnimator.isRunning()) {
+                    mDimAnimator.end();
+                }
             }
             int duration = mDimDismissDuration > 0 && mDimDismissDuration < mDismissDuration
                     ? mDimDismissDuration : mDismissDuration;

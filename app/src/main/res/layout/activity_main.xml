@@ -21,11 +21,22 @@
         android:id="@+id/btn_normal_dialog"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="show normal dialog"
         android:layout_marginTop="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="show normal dialog"
+        app:layout_constraintBottom_toTopOf="@id/btn_demo_dialog"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btn_anim_dialog" />
+
+    <Button
+        android:id="@+id/btn_demo_dialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="show demo dialog"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_normal_dialog" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

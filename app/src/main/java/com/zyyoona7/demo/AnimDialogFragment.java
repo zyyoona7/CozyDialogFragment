@@ -20,16 +20,7 @@ public class AnimDialogFragment extends BaseAnimatorDialogFragment {
     private View.OnClickListener mOkClickListener;
 
     public static AnimDialogFragment newInstance() {
-        return newInstance(-1);
-    }
-
-    public static AnimDialogFragment newInstance(int requestId) {
-
-        Bundle args = new Bundle();
-
-        AnimDialogFragment fragment = new AnimDialogFragment();
-        fragment.setArguments(args, requestId);
-        return fragment;
+        return new AnimDialogFragment();
     }
 
     @NonNull
@@ -41,9 +32,17 @@ public class AnimDialogFragment extends BaseAnimatorDialogFragment {
         builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (mOkClickListener != null) {
-                    mOkClickListener.onClick(null);
+                if (mOkClickListener == null) {
+                    return;
                 }
+                addAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mOkClickListener != null) {
+                            mOkClickListener.onClick(null);
+                        }
+                    }
+                });
             }
         });
         return builder.create();
