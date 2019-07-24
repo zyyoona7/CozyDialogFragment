@@ -7,6 +7,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -46,6 +47,13 @@ public class AnimDialogFragment extends BaseAnimatorDialogFragment {
             }
         });
         return builder.create();
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+//        getDialog().getWindow().addFlags(
+//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
     @Override

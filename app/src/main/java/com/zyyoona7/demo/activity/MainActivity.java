@@ -1,21 +1,39 @@
-package com.zyyoona7.demo;
+package com.zyyoona7.demo.activity;
 
 import android.content.DialogInterface;
-import android.os.Build;
-import android.os.Bundle;
+import android.content.Intent;
+import android.graphics.Color;
 import android.view.View;
-import android.widget.Button;
 
-import androidx.appcompat.app.AppCompatActivity;
+import com.gyf.immersionbar.ImmersionBar;
+import com.zyyoona7.demo.AnimDialogFragment;
+import com.zyyoona7.demo.DemoDialogFragment;
+import com.zyyoona7.demo.NormalDialogFragment;
+import com.zyyoona7.demo.R;
+import com.zyyoona7.demo.databinding.ActivityMainBinding;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity<ActivityMainBinding> {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Button animBtn = findViewById(R.id.btn_anim_dialog);
-        animBtn.setOnClickListener(new View.OnClickListener() {
+    protected int getLayoutResId() {
+        return R.layout.activity_main;
+    }
+
+    @Override
+    protected void init() {
+        ImmersionBar.setTitleBar(this, mBinding.toolbar);
+    }
+
+    @Override
+    protected void initListeners() {
+        mBinding.btnGoFullScreen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, FullScreenActivity.class);
+                startActivity(intent);
+            }
+        });
+        mBinding.btnAnimDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 //                showAnimDialogFragment(1);
@@ -29,16 +47,14 @@ public class MainActivity extends AppCompatActivity {
 //                },3000);
             }
         });
-        Button normalBtn = findViewById(R.id.btn_normal_dialog);
-        normalBtn.setOnClickListener(new View.OnClickListener() {
+        mBinding.btnNormalDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showNormalDialogFragment();
             }
         });
 
-        Button demoBtn=findViewById(R.id.btn_demo_dialog);
-        demoBtn.setOnClickListener(new View.OnClickListener() {
+        mBinding.btnDemoDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showDemoDialogFragment();
@@ -57,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
         dialogFragment.setDismissDuration(300);
         dialogFragment.setDimAmount(0.5f);
         dialogFragment.setRequestId(requestId);
+        dialogFragment.setDimColor(Color.RED);
         dialogFragment.setOkClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -66,12 +83,12 @@ public class MainActivity extends AppCompatActivity {
         dialogFragment.showAllowingStateLoss(getSupportFragmentManager());
     }
 
-    private void showDemoDialogFragment(){
-        DemoDialogFragment demoDialogFragment=DemoDialogFragment.newInstance();
+    private void showDemoDialogFragment() {
+        DemoDialogFragment demoDialogFragment = DemoDialogFragment.newInstance();
         demoDialogFragment.setFullWidth();
         demoDialogFragment.setHeight(200);
         demoDialogFragment.setBottomGravity();
-        demoDialogFragment.setPaddingHorizontal(20,20);
+        demoDialogFragment.setPaddingHorizontal(20, 20);
         demoDialogFragment.setPaddingBottom(20);
         demoDialogFragment.showAllowingStateLoss(getSupportFragmentManager());
     }
