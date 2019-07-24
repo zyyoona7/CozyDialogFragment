@@ -1,5 +1,7 @@
 package com.zyyoona7.easydfrag.dialog;
 
+import com.zyyoona7.easydfrag.listener.OnAnimInterceptCallback;
+
 /**
  * To use BaseAnimDialogFragment must be implements IAnimDialog for Dialog
  *

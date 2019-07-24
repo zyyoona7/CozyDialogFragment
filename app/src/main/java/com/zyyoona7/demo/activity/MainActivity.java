@@ -43,8 +43,6 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> implements O
 //                new Handler().postDelayed(new Runnable() {
 //                    @Override
 //                    public void run() {
-//                        EasyUtils.dismissAllowingStateLoss(getSupportFragmentManager(),
-//                                AnimDialogFragment.class,0);
 //                    }
 //                },3000);
             }

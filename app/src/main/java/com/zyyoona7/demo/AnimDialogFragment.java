@@ -18,8 +18,6 @@ import com.zyyoona7.easydfrag.listener.OnDialogClickListener;
 
 public class AnimDialogFragment extends BaseAnimatorDialogFragment {
 
-    private View.OnClickListener mOkClickListener;
-
     public static AnimDialogFragment newInstance() {
         return new AnimDialogFragment();
     }

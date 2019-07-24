@@ -1,10 +1,12 @@
-package com.zyyoona7.easydfrag.dialog;
+package com.zyyoona7.easydfrag.helper;
 
 import android.app.Dialog;
 import android.content.Context;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
+
+import com.zyyoona7.easydfrag.listener.OnAnimInterceptCallback;
 
 /**
  * The helper class of IAnimDialog

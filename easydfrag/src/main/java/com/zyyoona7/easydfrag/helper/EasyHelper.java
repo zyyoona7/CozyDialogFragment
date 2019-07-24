@@ -1,4 +1,4 @@
-package com.zyyoona7.easydfrag.utils;
+package com.zyyoona7.easydfrag.helper;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
@@ -13,9 +13,9 @@ import com.zyyoona7.easydfrag.base.BaseDialogFragment;
  * @author zyyoona7
  * @since 2019/07/22
  */
-public class EasyUtils {
+public class EasyHelper {
 
-    private EasyUtils() {
+    private EasyHelper() {
     }
 
     /**

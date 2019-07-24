@@ -1,11 +1,13 @@
 package com.zyyoona7.easydfrag.dialog;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.view.MotionEvent;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDialog;
+
+import com.zyyoona7.easydfrag.helper.AnimDialogHelper;
+import com.zyyoona7.easydfrag.listener.OnAnimInterceptCallback;
 
 /**
  * custom Dialog for BaseAnimDialogFragment.

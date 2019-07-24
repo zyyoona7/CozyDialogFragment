@@ -1,4 +1,4 @@
-package com.zyyoona7.easydfrag.dialog;
+package com.zyyoona7.easydfrag.listener;
 
 import android.view.MotionEvent;
 

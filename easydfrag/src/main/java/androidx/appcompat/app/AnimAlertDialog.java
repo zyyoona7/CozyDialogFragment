@@ -21,9 +21,9 @@ import androidx.annotation.RestrictTo;
 import androidx.annotation.StringRes;
 import androidx.annotation.StyleRes;
 
-import com.zyyoona7.easydfrag.dialog.AnimDialogHelper;
+import com.zyyoona7.easydfrag.helper.AnimDialogHelper;
 import com.zyyoona7.easydfrag.dialog.IAnimDialog;
-import com.zyyoona7.easydfrag.dialog.OnAnimInterceptCallback;
+import com.zyyoona7.easydfrag.listener.OnAnimInterceptCallback;
 
 import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP;
 

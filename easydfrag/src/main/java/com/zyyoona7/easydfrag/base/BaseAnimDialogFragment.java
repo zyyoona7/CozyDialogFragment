@@ -21,7 +21,7 @@ import androidx.annotation.RequiresApi;
 
 import com.zyyoona7.easydfrag.dialog.AnimDialog;
 import com.zyyoona7.easydfrag.dialog.IAnimDialog;
-import com.zyyoona7.easydfrag.dialog.OnAnimInterceptCallback;
+import com.zyyoona7.easydfrag.listener.OnAnimInterceptCallback;
 
 import java.util.ArrayList;
 import java.util.List;
