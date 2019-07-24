@@ -11,8 +11,10 @@ import com.zyyoona7.demo.DemoDialogFragment;
 import com.zyyoona7.demo.NormalDialogFragment;
 import com.zyyoona7.demo.R;
 import com.zyyoona7.demo.databinding.ActivityMainBinding;
+import com.zyyoona7.easydfrag.base.BaseDialogFragment;
+import com.zyyoona7.easydfrag.listener.OnDialogClickListener;
 
-public class MainActivity extends BaseActivity<ActivityMainBinding> {
+public class MainActivity extends BaseActivity<ActivityMainBinding> implements OnDialogClickListener {
 
     @Override
     protected int getLayoutResId() {
@@ -74,12 +76,6 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
         dialogFragment.setDimAmount(0.5f);
         dialogFragment.setRequestId(requestId);
         dialogFragment.setDimColor(Color.RED);
-        dialogFragment.setOkClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showAnimDialogFragment(1);
-            }
-        });
         dialogFragment.showAllowingStateLoss(getSupportFragmentManager());
     }
 
@@ -104,5 +100,12 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
             }
         });
         normalDialogFragment.showAllowingStateLoss(getSupportFragmentManager());
+    }
+
+    @Override
+    public void onClick(BaseDialogFragment dialogFragment, int which, int requestId) {
+        if (requestId==0 && which==DialogInterface.BUTTON_POSITIVE) {
+            showAnimDialogFragment(1);
+        }
     }
 }

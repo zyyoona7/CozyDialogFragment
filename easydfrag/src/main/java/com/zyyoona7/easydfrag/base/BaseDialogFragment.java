@@ -1,7 +1,9 @@
 package com.zyyoona7.easydfrag.base;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +19,8 @@ import androidx.fragment.app.ExternalDialogFragment;
 import androidx.fragment.app.FragmentActivity;
 
 import com.zyyoona7.easydfrag.R;
+import com.zyyoona7.easydfrag.listener.OnDialogClickListener;
+import com.zyyoona7.easydfrag.listener.OnDialogMultiChoiceClickListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -232,6 +236,15 @@ public class BaseDialogFragment extends ExternalDialogFragment {
     }
 
     /**
+     * Sets DialogFragment content width with dip unit.
+     *
+     * @param widthDp width dip
+     */
+    public void setWidth(float widthDp) {
+        mWidth = dp2px(widthDp);
+    }
+
+    /**
      * Sets DialogFragment content width MATCH_PARENT.
      */
     public void setFullWidth() {
@@ -243,6 +256,15 @@ public class BaseDialogFragment extends ExternalDialogFragment {
      */
     public void setWrapWidth() {
         mWidth = ViewGroup.LayoutParams.WRAP_CONTENT;
+    }
+
+    /**
+     * Sets DialogFragment content width with screen width percent.
+     *
+     * @param widthPercent percent of screen width
+     */
+    public void setWidthPercent(@FloatRange(from = 0, to = 1f) float widthPercent) {
+        mWidth = (int) (Resources.getSystem().getDisplayMetrics().widthPixels * widthPercent);
     }
 
     /**
@@ -262,6 +284,15 @@ public class BaseDialogFragment extends ExternalDialogFragment {
     }
 
     /**
+     * Sets DialogFragment content height with dip unit.
+     *
+     * @param heightDp height dip
+     */
+    public void setHeight(float heightDp) {
+        mHeight = dp2px(heightDp);
+    }
+
+    /**
      * Sets DialogFragment content height MATCH_PARENT.
      */
     public void setFullHeight() {
@@ -273,6 +304,15 @@ public class BaseDialogFragment extends ExternalDialogFragment {
      */
     public void setWrapHeight() {
         mHeight = ViewGroup.LayoutParams.WRAP_CONTENT;
+    }
+
+    /**
+     * Sets DialogFragment content height with screen height percent.
+     *
+     * @param heightPercent percent of screen height
+     */
+    public void setHeightPercent(@FloatRange(from = 0f, to = 1f) float heightPercent) {
+        mHeight = (int) (Resources.getSystem().getDisplayMetrics().heightPixels * heightPercent);
     }
 
     /**
@@ -292,6 +332,15 @@ public class BaseDialogFragment extends ExternalDialogFragment {
     }
 
     /**
+     * Sets Window content view padding left with dip unit.
+     *
+     * @param paddingLeftDp padding left dip
+     */
+    public void setPaddingLeft(float paddingLeftDp) {
+        mPaddingLeft = dp2px(paddingLeftDp);
+    }
+
+    /**
      * @return Window content view padding top
      */
     public int getPaddingTop() {
@@ -307,6 +356,18 @@ public class BaseDialogFragment extends ExternalDialogFragment {
         mPaddingTop = paddingTop;
     }
 
+    /**
+     * Sets Window content view padding top with dip unit.
+     *
+     * @param paddingTopDp padding top dip
+     */
+    public void setPaddingTop(float paddingTopDp) {
+        mPaddingTop = dp2px(paddingTopDp);
+    }
+
+    /**
+     * @return Window content view padding top
+     */
     public int getPaddingRight() {
         return mPaddingRight;
     }
@@ -318,6 +379,15 @@ public class BaseDialogFragment extends ExternalDialogFragment {
      */
     public void setPaddingRight(int paddingRight) {
         mPaddingRight = paddingRight;
+    }
+
+    /**
+     * Sets Window content view padding right with dip unit.
+     *
+     * @param paddingRightDp padding right dip
+     */
+    public void setPaddingRight(float paddingRightDp) {
+        mPaddingRight = dp2px(paddingRightDp);
     }
 
     /**
@@ -337,7 +407,16 @@ public class BaseDialogFragment extends ExternalDialogFragment {
     }
 
     /**
-     * Both sets Window content view padding left and padding right.
+     * Sets Window content view padding bottom with dip unit.
+     *
+     * @param paddingBottomDp padding bottom dip
+     */
+    public void setPaddingBottom(float paddingBottomDp) {
+        mPaddingBottom = dp2px(paddingBottomDp);
+    }
+
+    /**
+     * Sets Window content view left and right padding at the same time.
      *
      * @param paddingLeft  padding left
      * @param paddingRight padding right
@@ -348,7 +427,18 @@ public class BaseDialogFragment extends ExternalDialogFragment {
     }
 
     /**
-     * Both sets Window content view padding top and padding right.
+     * Sets Window content view left and right padding with dip unit at the same time.
+     *
+     * @param paddingLeftDp  padding left dip
+     * @param paddingRightDp padding right dip
+     */
+    public void setPaddingHorizontal(float paddingLeftDp, float paddingRightDp) {
+        mPaddingLeft = dp2px(paddingLeftDp);
+        mPaddingRight = dp2px(paddingRightDp);
+    }
+
+    /**
+     * Sets Window content view top and bottom padding at the same time.
      *
      * @param paddingTop    padding top
      * @param paddingBottom padding bottom
@@ -356,6 +446,17 @@ public class BaseDialogFragment extends ExternalDialogFragment {
     public void setPaddingVertical(int paddingTop, int paddingBottom) {
         mPaddingTop = paddingTop;
         mPaddingBottom = paddingBottom;
+    }
+
+    /**
+     * Sets Window content view top and bottom padding with dip unit at the same time.
+     *
+     * @param paddingTopDp    padding top dip
+     * @param paddingBottomDp padding bottom dip
+     */
+    public void setPaddingVerticla(float paddingTopDp, float paddingBottomDp) {
+        mPaddingTop = dp2px(paddingTopDp);
+        mPaddingBottom = dp2px(paddingBottomDp);
     }
 
     /**
@@ -430,7 +531,35 @@ public class BaseDialogFragment extends ExternalDialogFragment {
     }
 
     /**
-     * 获取所有符合条件的 dialog 监听器
+     * @return OnDialogClickListener list from targetFragment,parentFragment,getActivity
+     */
+    protected List<OnDialogClickListener> getDialogClickListeners() {
+        return getDialogListeners(OnDialogClickListener.class);
+    }
+
+    /**
+     * @return OnDialogClickListener from one of targetFragment,parentFragment,getActivity
+     */
+    protected OnDialogClickListener getDialogClickListener() {
+        return getDialogListener(OnDialogClickListener.class);
+    }
+
+    /**
+     * @return OnDialogMultiChoiceClickListener list from targetFragment,parentFragment,getActivity
+     */
+    protected List<OnDialogMultiChoiceClickListener> getDialogMultiChoiceClickListeners() {
+        return getDialogListeners(OnDialogMultiChoiceClickListener.class);
+    }
+
+    /**
+     * @return OnDialogMultiChoiceClickListener from one of targetFragment,parentFragment,getActivity
+     */
+    protected OnDialogMultiChoiceClickListener getDialogMultiChoiceClickListener() {
+        return getDialogListener(OnDialogMultiChoiceClickListener.class);
+    }
+
+    /**
+     * 获取所有符合条件的 DialogFragment 监听器
      *
      * @param listenerInterface listener class
      * @param <T>               listener
@@ -453,7 +582,7 @@ public class BaseDialogFragment extends ExternalDialogFragment {
     }
 
     /**
-     * 获取一个符合条件的 dialog 监听器
+     * 获取一个符合条件的 DialogFragment 监听器
      *
      * @param listenerInterface listener class
      * @param <T>               listener
@@ -472,5 +601,11 @@ public class BaseDialogFragment extends ExternalDialogFragment {
             return (T) getActivity();
         }
         return null;
+    }
+
+    private static int dp2px(float dp) {
+        //向上取整
+        return (int) Math.ceil(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                dp, Resources.getSystem().getDisplayMetrics()));
     }
 }

@@ -20,7 +20,11 @@ public abstract class BaseActivity<VDB extends ViewDataBinding> extends AppCompa
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initContentView();
-        ImmersionBar.with(this)
+        ImmersionBar immersionBar=ImmersionBar.with(this);
+        if (useStatusDarkFont()) {
+            immersionBar.statusBarDarkFont(true,0.2f);
+        }
+        immersionBar
                 .init();
         Toolbar toolbar = findViewById(R.id.toolbar);
         if (toolbar != null) {
@@ -34,6 +38,10 @@ public abstract class BaseActivity<VDB extends ViewDataBinding> extends AppCompa
         if (getLayoutResId() != 0) {
             mBinding = DataBindingUtil.setContentView(this, getLayoutResId());
         }
+    }
+
+    protected boolean useStatusDarkFont(){
+        return false;
     }
 
     /**

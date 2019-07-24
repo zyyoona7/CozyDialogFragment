@@ -7,7 +7,6 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
-import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,6 +14,7 @@ import androidx.appcompat.app.AnimAlertDialog;
 
 import com.zyyoona7.demo.interpolator.SpringInterpolator;
 import com.zyyoona7.easydfrag.base.BaseAnimatorDialogFragment;
+import com.zyyoona7.easydfrag.listener.OnDialogClickListener;
 
 public class AnimDialogFragment extends BaseAnimatorDialogFragment {
 
@@ -32,28 +32,23 @@ public class AnimDialogFragment extends BaseAnimatorDialogFragment {
         builder.setMessage("Anim Dialog" + getRequestId());
         builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (mOkClickListener == null) {
+            public void onClick(DialogInterface dialog, final int which) {
+                final OnDialogClickListener listener = getDialogClickListener();
+                if (listener == null) {
                     return;
                 }
                 addAction(new Runnable() {
                     @Override
                     public void run() {
-                        if (mOkClickListener != null) {
-                            mOkClickListener.onClick(null);
+                        OnDialogClickListener clickListener = getDialogClickListener();
+                        if (clickListener != null) {
+                            clickListener.onClick(AnimDialogFragment.this, which, getRequestId());
                         }
                     }
                 });
             }
         });
         return builder.create();
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-//        getDialog().getWindow().addFlags(
-//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
     @Override
@@ -76,7 +71,4 @@ public class AnimDialogFragment extends BaseAnimatorDialogFragment {
                 .ofPropertyValuesHolder(targetView, holder1, holder2, holder3);
     }
 
-    public void setOkClickListener(View.OnClickListener listener) {
-        mOkClickListener = listener;
-    }
 }

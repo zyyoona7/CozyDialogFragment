@@ -1,20 +1,19 @@
 package com.zyyoona7.demo.activity;
 
+import android.content.DialogInterface;
 import android.graphics.Color;
-import android.os.Bundle;
 import android.view.View;
-
-import androidx.appcompat.widget.Toolbar;
 
 import com.blankj.utilcode.util.BarUtils;
 import com.gyf.immersionbar.ImmersionBar;
 import com.zyyoona7.demo.AnimDialogFragment;
 import com.zyyoona7.demo.R;
-import com.zyyoona7.demo.activity.BaseActivity;
 import com.zyyoona7.demo.databinding.ActivityFullScreenBinding;
 import com.zyyoona7.demo.utils.PNotchUtils;
+import com.zyyoona7.easydfrag.base.BaseDialogFragment;
+import com.zyyoona7.easydfrag.listener.OnDialogClickListener;
 
-public class FullScreenActivity extends BaseActivity<ActivityFullScreenBinding> {
+public class FullScreenActivity extends BaseActivity<ActivityFullScreenBinding> implements OnDialogClickListener {
 
     @Override
     protected int getLayoutResId() {
@@ -48,12 +47,13 @@ public class FullScreenActivity extends BaseActivity<ActivityFullScreenBinding> 
         dialogFragment.setDimColor(Color.CYAN);
         dialogFragment.setFullWidth();
         dialogFragment.setFullHeight();
-        dialogFragment.setOkClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showAnimDialogFragment(1);
-            }
-        });
         dialogFragment.showAllowingStateLoss(getSupportFragmentManager());
+    }
+
+    @Override
+    public void onClick(BaseDialogFragment dialogFragment, int which, int requestId) {
+        if (requestId == 1 && which == DialogInterface.BUTTON_POSITIVE) {
+            showAnimDialogFragment(1);
+        }
     }
 }

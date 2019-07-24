@@ -339,7 +339,7 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
     private ObjectAnimator onCreateDimAnimator() {
         initDimDrawableIfNull();
         ObjectAnimator animator = ObjectAnimator.ofInt(mDimDrawable, "alpha",
-                0, Math.round(getDimAmount() * 255));
+                0, (int) Math.ceil(getDimAmount() * 255));
         animator.setInterpolator(new LinearInterpolator());
         return animator;
     }
