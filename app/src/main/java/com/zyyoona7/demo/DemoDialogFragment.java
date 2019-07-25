@@ -55,7 +55,6 @@ public class DemoDialogFragment extends BaseAnimDialogFragment {
         if (mSpringAnimation == null) {
             return;
         }
-        startDimShowAnimation();
         mSpringAnimation.start();
     }
 
@@ -67,7 +66,7 @@ public class DemoDialogFragment extends BaseAnimDialogFragment {
             mDismissAnimator.addListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    superDismissInternal(stateLoss);
+                    realDismiss(stateLoss);
                 }
             });
         }
@@ -79,11 +78,10 @@ public class DemoDialogFragment extends BaseAnimDialogFragment {
             mSpringAnimation.cancel();
         }
         if (mDismissAnimator == null) {
-            superDismissInternal(stateLoss);
+            realDismiss(stateLoss);
             Log.d(TAG, "onStartDismissAnimation: dismissAnimator is null");
             return;
         }
-        startDimDismissAnimation();
         mDismissAnimator.setDuration(getDismissDuration());
         mDismissAnimator.start();
     }

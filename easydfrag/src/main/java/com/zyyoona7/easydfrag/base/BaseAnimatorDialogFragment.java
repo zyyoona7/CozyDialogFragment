@@ -2,6 +2,7 @@ package com.zyyoona7.easydfrag.base;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -45,7 +46,6 @@ public abstract class BaseAnimatorDialogFragment extends BaseAnimDialogFragment 
         if (mShowAnimator == null) {
             return;
         }
-        startDimShowAnimation();
         mShowAnimator.setDuration(getShowDuration());
         mShowAnimator.start();
     }
@@ -60,13 +60,13 @@ public abstract class BaseAnimatorDialogFragment extends BaseAnimDialogFragment 
                     @Override
                     public void onAnimationStart(Animator animation) {
                         super.onAnimationStart(animation);
-                        onDismissAnimationStart(targetView, stateLoss);
+                        onDismissAnimationStart(targetView);
                     }
 
                     @Override
                     public void onAnimationEnd(Animator animation) {
-                        onDismissAnimationEnd(targetView, stateLoss);
-                        superDismissInternal(stateLoss);
+                        onDismissAnimationEnd(targetView);
+                        realDismiss(stateLoss);
                     }
                 });
             }
@@ -76,15 +76,25 @@ public abstract class BaseAnimatorDialogFragment extends BaseAnimDialogFragment 
     @Override
     protected void onStartDismissAnimation(@NonNull View targetView, boolean stateLoss) {
         if (mShowAnimator != null && mShowAnimator.isRunning()) {
-            mShowAnimator.end();
+            mShowAnimator.cancel();
         }
         if (mDismissAnimator == null) {
-            superDismissInternal(stateLoss);
+            if (!isUseDimAnimation()) {
+                realDismiss(stateLoss);
+            }
             return;
         }
-        startDimDismissAnimation();
         mDismissAnimator.setDuration(getDismissDuration());
         mDismissAnimator.start();
+    }
+
+    @Override
+    protected void onDimAnimationEnd(Drawable dimDrawable, boolean isDismiss) {
+        super.onDimAnimationEnd(dimDrawable, isDismiss);
+        if (isDismiss
+                && isUseDismissAnimation() && mDismissAnimator == null) {
+            realDismiss(true);
+        }
     }
 
     @Override
@@ -113,6 +123,24 @@ public abstract class BaseAnimatorDialogFragment extends BaseAnimDialogFragment 
     protected abstract Animator onCreateShowAnimator(@NonNull View targetView);
 
     /**
+     * show animation start callback
+     *
+     * @param targetView Window content view
+     */
+    protected void onShowAnimationStart(@NonNull View targetView) {
+
+    }
+
+    /**
+     * show animation end callback
+     *
+     * @param targetView Window content view
+     */
+    protected void onShowAnimationEnd(@NonNull View targetView) {
+
+    }
+
+    /**
      * create dismiss animation used to DialogFragment dismiss
      *
      * @param targetView Window content view
@@ -120,4 +148,22 @@ public abstract class BaseAnimatorDialogFragment extends BaseAnimDialogFragment 
      */
     @Nullable
     protected abstract Animator onCreateDismissAnimator(@NonNull View targetView);
+
+    /**
+     * dismiss animation start callback
+     *
+     * @param targetView Window content view
+     */
+    protected void onDismissAnimationStart(@NonNull View targetView) {
+
+    }
+
+    /**
+     * dismiss animation end callback
+     *
+     * @param targetView Window content view
+     */
+    protected void onDismissAnimationEnd(@NonNull View targetView) {
+
+    }
 }
