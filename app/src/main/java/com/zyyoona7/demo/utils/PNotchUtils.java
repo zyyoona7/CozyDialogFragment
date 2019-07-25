@@ -74,9 +74,16 @@ public class PNotchUtils {
         if (isNotVersionP()) {
             return;
         }
-        WindowManager.LayoutParams attributes = activity.getWindow().getAttributes();
+        fillNotchForFullScreen(activity.getWindow());
+    }
+
+    public static void fillNotchForFullScreen(Window window){
+        if (isNotVersionP()) {
+            return;
+        }
+        WindowManager.LayoutParams attributes = window.getAttributes();
         attributes.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
-        activity.getWindow().setAttributes(attributes);
+        window.setAttributes(attributes);
     }
 
     /**

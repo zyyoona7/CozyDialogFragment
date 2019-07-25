@@ -22,6 +22,11 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> implements O
     }
 
     @Override
+    protected boolean useStatusDarkFont() {
+        return true;
+    }
+
+    @Override
     protected void init() {
         ImmersionBar.setTitleBar(this, mBinding.toolbar);
     }
@@ -80,10 +85,11 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> implements O
     private void showDemoDialogFragment() {
         DemoDialogFragment demoDialogFragment = DemoDialogFragment.newInstance();
         demoDialogFragment.setFullWidth();
-        demoDialogFragment.setHeight(200);
+        demoDialogFragment.setHeight(200f);
+//        demoDialogFragment.setFullHeight();
         demoDialogFragment.setBottomGravity();
-        demoDialogFragment.setPaddingHorizontal(20, 20);
-        demoDialogFragment.setPaddingBottom(20);
+        demoDialogFragment.setPaddingHorizontal(20f, 20f);
+        demoDialogFragment.setPaddingVertical(20f, 20f);
         demoDialogFragment.showAllowingStateLoss(getSupportFragmentManager());
     }
 
@@ -102,7 +108,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> implements O
 
     @Override
     public void onClick(BaseDialogFragment dialogFragment, int which, int requestId) {
-        if (requestId==0 && which==DialogInterface.BUTTON_POSITIVE) {
+        if (requestId == 0 && which == DialogInterface.BUTTON_POSITIVE) {
             showAnimDialogFragment(1);
         }
     }

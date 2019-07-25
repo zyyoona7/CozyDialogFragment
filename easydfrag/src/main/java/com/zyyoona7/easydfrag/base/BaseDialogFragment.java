@@ -454,7 +454,7 @@ public class BaseDialogFragment extends ExternalDialogFragment {
      * @param paddingTopDp    padding top dip
      * @param paddingBottomDp padding bottom dip
      */
-    public void setPaddingVerticla(float paddingTopDp, float paddingBottomDp) {
+    public void setPaddingVertical(float paddingTopDp, float paddingBottomDp) {
         mPaddingTop = dp2px(paddingTopDp);
         mPaddingBottom = dp2px(paddingBottomDp);
     }
