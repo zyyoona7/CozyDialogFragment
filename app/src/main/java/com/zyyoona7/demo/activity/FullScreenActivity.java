@@ -11,7 +11,7 @@ import com.zyyoona7.demo.R;
 import com.zyyoona7.demo.databinding.ActivityFullScreenBinding;
 import com.zyyoona7.demo.utils.PNotchUtils;
 import com.zyyoona7.easydfrag.base.BaseDialogFragment;
-import com.zyyoona7.easydfrag.listener.OnDialogClickListener;
+import com.zyyoona7.easydfrag.callback.OnDialogClickListener;
 
 public class FullScreenActivity extends BaseActivity<ActivityFullScreenBinding> implements OnDialogClickListener {
 

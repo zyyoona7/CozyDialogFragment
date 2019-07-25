@@ -7,7 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDialog;
 
 import com.zyyoona7.easydfrag.helper.AnimDialogHelper;
-import com.zyyoona7.easydfrag.listener.OnAnimInterceptCallback;
+import com.zyyoona7.easydfrag.callback.OnAnimInterceptCallback;
 
 /**
  * custom Dialog for BaseAnimDialogFragment.

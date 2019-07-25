@@ -1,4 +1,4 @@
-package com.zyyoona7.easydfrag.listener;
+package com.zyyoona7.easydfrag.callback;
 
 import android.view.MotionEvent;
 

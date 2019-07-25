@@ -12,7 +12,7 @@ import com.zyyoona7.demo.NormalDialogFragment;
 import com.zyyoona7.demo.R;
 import com.zyyoona7.demo.databinding.ActivityMainBinding;
 import com.zyyoona7.easydfrag.base.BaseDialogFragment;
-import com.zyyoona7.easydfrag.listener.OnDialogClickListener;
+import com.zyyoona7.easydfrag.callback.OnDialogClickListener;
 
 public class MainActivity extends BaseActivity<ActivityMainBinding> implements OnDialogClickListener {
 

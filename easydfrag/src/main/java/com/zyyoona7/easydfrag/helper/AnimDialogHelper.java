@@ -6,7 +6,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 
-import com.zyyoona7.easydfrag.listener.OnAnimInterceptCallback;
+import com.zyyoona7.easydfrag.callback.OnAnimInterceptCallback;
 
 /**
  * The helper class of IAnimDialog

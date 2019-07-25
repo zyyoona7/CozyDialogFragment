@@ -14,7 +14,7 @@ import androidx.appcompat.app.AnimAlertDialog;
 
 import com.zyyoona7.demo.interpolator.SpringInterpolator;
 import com.zyyoona7.easydfrag.base.BaseAnimatorDialogFragment;
-import com.zyyoona7.easydfrag.listener.OnDialogClickListener;
+import com.zyyoona7.easydfrag.callback.OnDialogClickListener;
 
 public class AnimDialogFragment extends BaseAnimatorDialogFragment {
 

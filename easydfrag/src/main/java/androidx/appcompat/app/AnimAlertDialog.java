@@ -23,7 +23,7 @@ import androidx.annotation.StyleRes;
 
 import com.zyyoona7.easydfrag.helper.AnimDialogHelper;
 import com.zyyoona7.easydfrag.dialog.IAnimDialog;
-import com.zyyoona7.easydfrag.listener.OnAnimInterceptCallback;
+import com.zyyoona7.easydfrag.callback.OnAnimInterceptCallback;
 
 import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP;
 

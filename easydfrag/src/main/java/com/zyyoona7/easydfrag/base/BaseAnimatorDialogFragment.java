@@ -19,14 +19,21 @@ public abstract class BaseAnimatorDialogFragment extends BaseAnimDialogFragment 
     private Animator mDismissAnimator;
 
     @Override
-    protected void onCreateShowAnimation(@NonNull View targetView) {
+    protected void onCreateShowAnimation(@NonNull final View targetView) {
         if (mShowAnimator == null) {
             mShowAnimator = onCreateShowAnimator(targetView);
             if (mShowAnimator != null) {
                 mShowAnimator.addListener(new AnimatorListenerAdapter() {
                     @Override
+                    public void onAnimationStart(Animator animation) {
+                        super.onAnimationStart(animation);
+                        onShowAnimationStart(targetView);
+                    }
+
+                    @Override
                     public void onAnimationEnd(Animator animation) {
                         super.onAnimationEnd(animation);
+                        onShowAnimationEnd(targetView);
                     }
                 });
             }
@@ -44,13 +51,21 @@ public abstract class BaseAnimatorDialogFragment extends BaseAnimDialogFragment 
     }
 
     @Override
-    protected void onCreateDismissAnimation(@NonNull View targetView, final boolean stateLoss) {
+    protected void onCreateDismissAnimation(@NonNull final View targetView, final boolean stateLoss) {
         if (mDismissAnimator == null) {
             mDismissAnimator = onCreateDismissAnimator(targetView);
             if (mDismissAnimator != null) {
                 mDismissAnimator.addListener(new AnimatorListenerAdapter() {
+
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+                        super.onAnimationStart(animation);
+                        onDismissAnimationStart(targetView, stateLoss);
+                    }
+
                     @Override
                     public void onAnimationEnd(Animator animation) {
+                        onDismissAnimationEnd(targetView, stateLoss);
                         superDismissInternal(stateLoss);
                     }
                 });

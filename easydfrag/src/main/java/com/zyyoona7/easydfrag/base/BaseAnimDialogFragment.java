@@ -1,5 +1,7 @@
 package com.zyyoona7.easydfrag.base;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -19,9 +21,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
+import com.zyyoona7.easydfrag.callback.OnAnimInterceptCallback;
 import com.zyyoona7.easydfrag.dialog.AnimDialog;
 import com.zyyoona7.easydfrag.dialog.IAnimDialog;
-import com.zyyoona7.easydfrag.listener.OnAnimInterceptCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +53,7 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
     private int mDimColor = Color.BLACK;
 
     //runnable list execute on animation end
-    private List<Runnable> mDismissRunnables;
+    private List<Runnable> mDismissActions;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -78,7 +80,7 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        return new AnimDialog(getContext(),getTheme());
+        return new AnimDialog(getContext(), getTheme());
     }
 
     @Override
@@ -177,6 +179,11 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
         super.dismiss();
     }
 
+    /**
+     * this method is real dismiss DialogFragment.
+     *
+     * @param stateLoss allow state loss
+     */
     protected void superDismissInternal(boolean stateLoss) {
         if (stateLoss) {
             superDismissAllowingStateLoss();
@@ -185,14 +192,14 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
         }
         safeRemoveDim();
         //execute dismiss actions if not empty
-        if (mDismissRunnables != null) {
-            for (int i = 0; i < mDismissRunnables.size(); i++) {
-                Runnable runnable = mDismissRunnables.get(i);
+        if (mDismissActions != null) {
+            for (int i = 0; i < mDismissActions.size(); i++) {
+                Runnable runnable = mDismissActions.get(i);
                 if (runnable != null) {
                     runnable.run();
                 }
             }
-            mDismissRunnables.clear();
+            mDismissActions.clear();
         }
     }
 
@@ -202,13 +209,13 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
      * @param runnable runnable
      */
     protected void addAction(Runnable runnable) {
-        if (mDismissRunnables == null) {
-            mDismissRunnables = new ArrayList<>(1);
+        if (mDismissActions == null) {
+            mDismissActions = new ArrayList<>(1);
         }
         if (runnable == null) {
             return;
         }
-        mDismissRunnables.add(runnable);
+        mDismissActions.add(runnable);
     }
 
     /**
@@ -246,7 +253,7 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
             //重建后，Animator 会是 null
             if (mDimAnimator == null) {
                 mDimAnimator = onCreateDimAnimator();
-            }else {
+            } else {
                 if (mDimAnimator.isRunning()) {
                     mDimAnimator.end();
                 }
@@ -315,6 +322,7 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
         super.onDestroyView();
         if (mDimAnimator != null) {
             mDimAnimator.cancel();
+            mDimAnimator.removeAllListeners();
             mDimAnimator = null;
         }
         safeRemoveDim();
@@ -341,7 +349,39 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
         ObjectAnimator animator = ObjectAnimator.ofInt(mDimDrawable, "alpha",
                 0, (int) Math.ceil(getDimAmount() * 255));
         animator.setInterpolator(new LinearInterpolator());
+        //add animation callback
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                onDimAnimationStart(mDimDrawable);
+            }
+
+            @Override
+            public void onAnimationStart(Animator animation) {
+                super.onAnimationStart(animation);
+                onDimAnimationEnd(mDimDrawable);
+            }
+        });
         return animator;
+    }
+
+    /**
+     * dim animation start callback
+     *
+     * @param dimDrawable dim drawable
+     */
+    protected void onDimAnimationStart(Drawable dimDrawable) {
+
+    }
+
+    /**
+     * dim animation end callback
+     *
+     * @param dimDrawable dim drawable
+     */
+    protected void onDimAnimationEnd(Drawable dimDrawable) {
+
     }
 
     /**
@@ -359,6 +399,24 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
     protected abstract void onStartShowAnimation(@NonNull View targetView);
 
     /**
+     * show animation start callback
+     *
+     * @param targetView Window content view
+     */
+    protected void onShowAnimationStart(@NonNull View targetView) {
+
+    }
+
+    /**
+     * show animation end callback
+     *
+     * @param targetView Window content view
+     */
+    protected void onShowAnimationEnd(@NonNull View targetView) {
+
+    }
+
+    /**
      * create dismiss animation used to DialogFragment dismiss
      *
      * @param targetView Window content view
@@ -373,6 +431,25 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
      * @param stateLoss  whether allowing state loss
      */
     protected abstract void onStartDismissAnimation(@NonNull View targetView, boolean stateLoss);
+
+    /**
+     * dismiss animation start callback,this method need subclass call on dismiss animation start.
+     * @param targetView
+     * @param stateLoss
+     */
+    protected void onDismissAnimationStart(@NonNull View targetView,boolean stateLoss){
+
+    }
+
+    /**
+     * dismiss animation end callback
+     *
+     * @param targetView Window content view
+     * @param stateLoss  whether allowing state loss
+     */
+    protected void onDismissAnimationEnd(@NonNull View targetView, boolean stateLoss) {
+
+    }
 
     /**
      * @return show animation duration

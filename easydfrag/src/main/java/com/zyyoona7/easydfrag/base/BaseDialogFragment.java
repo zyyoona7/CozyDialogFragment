@@ -19,8 +19,8 @@ import androidx.fragment.app.ExternalDialogFragment;
 import androidx.fragment.app.FragmentActivity;
 
 import com.zyyoona7.easydfrag.R;
-import com.zyyoona7.easydfrag.listener.OnDialogClickListener;
-import com.zyyoona7.easydfrag.listener.OnDialogMultiChoiceClickListener;
+import com.zyyoona7.easydfrag.callback.OnDialogClickListener;
+import com.zyyoona7.easydfrag.callback.OnDialogMultiChoiceClickListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
