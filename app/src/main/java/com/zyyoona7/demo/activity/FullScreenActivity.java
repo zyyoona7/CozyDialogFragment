@@ -45,8 +45,8 @@ public class FullScreenActivity extends BaseActivity<ActivityFullScreenBinding> 
         dialogFragment.setDimAmount(0.5f);
         dialogFragment.setRequestId(requestId);
         dialogFragment.setDimColor(Color.CYAN);
-        dialogFragment.setFullWidth();
-        dialogFragment.setFullHeight();
+        dialogFragment.setMatchWidth();
+        dialogFragment.setMatchHeight();
         dialogFragment.showAllowingStateLoss(getSupportFragmentManager());
     }
 

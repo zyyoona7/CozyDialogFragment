@@ -49,6 +49,7 @@ public class BaseDialogFragment extends ExternalDialogFragment {
     private static final String SAVED_PADDING_TOP = "SAVED_PADDING_TOP";
     private static final String SAVED_PADDING_RIGHT = "SAVED_PADDING_RIGHT";
     private static final String SAVED_PADDING_BOTTOM = "SAVED_PADDING_BOTTOM";
+    private static final String SAVED_FULLSCREEN = "SAVED_FULLSCREEN";
 
     protected FragmentActivity mActivity;
 
@@ -67,6 +68,7 @@ public class BaseDialogFragment extends ExternalDialogFragment {
     private int mPaddingTop = -1;
     private int mPaddingRight = -1;
     private int mPaddingBottom = -1;
+    private boolean mFullscreen = false;
 
     //DialogFragment id
     private int mRequestId = -1;
@@ -108,6 +110,7 @@ public class BaseDialogFragment extends ExternalDialogFragment {
             mPaddingTop = savedInstanceState.getInt(SAVED_PADDING_TOP, -1);
             mPaddingRight = savedInstanceState.getInt(SAVED_PADDING_RIGHT, -1);
             mPaddingBottom = savedInstanceState.getInt(SAVED_PADDING_BOTTOM, -1);
+            mFullscreen = savedInstanceState.getBoolean(SAVED_FULLSCREEN, false);
         }
     }
 
@@ -126,6 +129,7 @@ public class BaseDialogFragment extends ExternalDialogFragment {
         outState.putInt(SAVED_PADDING_TOP, mPaddingTop);
         outState.putInt(SAVED_PADDING_RIGHT, mPaddingRight);
         outState.putInt(SAVED_PADDING_BOTTOM, mPaddingBottom);
+        outState.putBoolean(SAVED_FULLSCREEN, mFullscreen);
         super.onSaveInstanceState(outState);
     }
 
@@ -150,6 +154,7 @@ public class BaseDialogFragment extends ExternalDialogFragment {
                 || mHeight == ViewGroup.LayoutParams.WRAP_CONTENT) {
             layoutParams.height = mHeight;
         }
+        window.setAttributes(layoutParams);
 
         View decor = window.getDecorView();
         decor.setPadding(mPaddingLeft >= 0 ? mPaddingLeft : decor.getPaddingLeft(),
@@ -157,6 +162,9 @@ public class BaseDialogFragment extends ExternalDialogFragment {
                 mPaddingRight >= 0 ? mPaddingRight : decor.getPaddingRight(),
                 mPaddingBottom >= 0 ? mPaddingBottom : decor.getPaddingBottom());
 
+        if (mFullscreen) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        }
         if (mAnimationStyle != 0) {
             window.setWindowAnimations(mAnimationStyle);
         }
@@ -247,7 +255,7 @@ public class BaseDialogFragment extends ExternalDialogFragment {
     /**
      * Sets DialogFragment content width MATCH_PARENT.
      */
-    public void setFullWidth() {
+    public void setMatchWidth() {
         mWidth = ViewGroup.LayoutParams.MATCH_PARENT;
     }
 
@@ -295,7 +303,7 @@ public class BaseDialogFragment extends ExternalDialogFragment {
     /**
      * Sets DialogFragment content height MATCH_PARENT.
      */
-    public void setFullHeight() {
+    public void setMatchHeight() {
         mHeight = ViewGroup.LayoutParams.MATCH_PARENT;
     }
 
@@ -512,6 +520,22 @@ public class BaseDialogFragment extends ExternalDialogFragment {
      */
     public void setBottomGravity() {
         mGravity = Gravity.BOTTOM;
+    }
+
+    /**
+     * @return whether Window fullscreen
+     */
+    public boolean isFullscreen() {
+        return mFullscreen;
+    }
+
+    /**
+     * Sets whether Window fullscreen,must with match_height and immersion status bar
+     *
+     * @param fullscreen whether Window fullscreen
+     */
+    public void setFullscreen(boolean fullscreen) {
+        mFullscreen = fullscreen;
     }
 
     /**

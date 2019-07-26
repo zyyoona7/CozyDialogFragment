@@ -84,10 +84,10 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> implements O
 
     private void showDemoDialogFragment() {
         DemoDialogFragment demoDialogFragment = DemoDialogFragment.newInstance();
-        demoDialogFragment.setFullWidth();
-        demoDialogFragment.setHeight(200f);
-//        demoDialogFragment.setFullHeight();
+        demoDialogFragment.setMatchWidth();
+        demoDialogFragment.setMatchHeight();
         demoDialogFragment.setBottomGravity();
+        demoDialogFragment.setFullscreen(true);
         demoDialogFragment.setPaddingHorizontal(20f, 20f);
         demoDialogFragment.setPaddingVertical(20f, 20f);
         demoDialogFragment.showAllowingStateLoss(getSupportFragmentManager());

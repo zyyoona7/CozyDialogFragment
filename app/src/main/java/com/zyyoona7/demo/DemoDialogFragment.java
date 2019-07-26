@@ -49,9 +49,9 @@ public class DemoDialogFragment extends BaseAnimDialogFragment {
         super.onActivityCreated(savedInstanceState);
         //适配沉浸式可解决 DialogFragment 铺满屏幕导致状态栏变黑
         //但是注意 此方法状态栏和导航栏都会侵入，所以如果内容太大或者不透明那么将会遮住导航栏
-//        ImmersionBar.with(this)
-//                .statusBarDarkFont(true,0.2f)
-//                .init();
+        ImmersionBar.with(this)
+                .statusBarDarkFont(true,0.2f)
+                .init();
         //所有的 FlAG 都是基于 Window 的，比如沉浸式状态栏，全屏等都是基于 Window 操作的
 
         //Dialog 和 Activity 是两个独立的 Window ，所有想要 Dialog 拥有同样的效果需要给-
