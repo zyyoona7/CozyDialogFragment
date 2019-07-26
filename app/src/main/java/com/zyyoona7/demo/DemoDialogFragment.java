@@ -21,7 +21,7 @@ import androidx.dynamicanimation.animation.SpringForce;
 
 import com.gyf.immersionbar.ImmersionBar;
 import com.zyyoona7.demo.utils.PNotchUtils;
-import com.zyyoona7.easydfrag.base.BaseAnimDialogFragment;
+import com.zyyoona7.cozydfrag.base.BaseAnimDialogFragment;
 
 public class DemoDialogFragment extends BaseAnimDialogFragment {
 

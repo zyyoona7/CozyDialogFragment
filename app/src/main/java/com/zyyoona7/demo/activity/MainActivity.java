@@ -11,8 +11,8 @@ import com.zyyoona7.demo.DemoDialogFragment;
 import com.zyyoona7.demo.NormalDialogFragment;
 import com.zyyoona7.demo.R;
 import com.zyyoona7.demo.databinding.ActivityMainBinding;
-import com.zyyoona7.easydfrag.base.BaseDialogFragment;
-import com.zyyoona7.easydfrag.callback.OnDialogClickListener;
+import com.zyyoona7.cozydfrag.base.BaseDialogFragment;
+import com.zyyoona7.cozydfrag.callback.OnDialogClickListener;
 
 public class MainActivity extends BaseActivity<ActivityMainBinding> implements OnDialogClickListener {
 

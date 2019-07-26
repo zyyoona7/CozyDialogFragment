@@ -1,2 +1,2 @@
-include ':app', ':easydfrag'
-rootProject.name='EasyDialogFragment'
+include ':app', ':cozydfrag'
+rootProject.name='CozyDialogFragment'

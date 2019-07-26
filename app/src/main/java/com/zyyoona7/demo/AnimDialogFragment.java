@@ -13,8 +13,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AnimAlertDialog;
 
 import com.zyyoona7.demo.interpolator.SpringInterpolator;
-import com.zyyoona7.easydfrag.base.BaseAnimatorDialogFragment;
-import com.zyyoona7.easydfrag.callback.OnDialogClickListener;
+import com.zyyoona7.cozydfrag.base.BaseAnimatorDialogFragment;
+import com.zyyoona7.cozydfrag.callback.OnDialogClickListener;
 
 public class AnimDialogFragment extends BaseAnimatorDialogFragment {
 

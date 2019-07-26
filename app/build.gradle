@@ -33,5 +33,5 @@ dependencies {
     implementation 'androidx.dynamicanimation:dynamicanimation:1.0.0'
     implementation 'com.gyf.immersionbar:immersionbar:3.0.0-beta05'
     implementation 'com.blankj:utilcodex:1.25.1'
-    implementation project(path: ':easydfrag')
+    implementation project(path: ':cozydfrag')
 }
