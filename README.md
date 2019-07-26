@@ -1,4 +1,4 @@
-# EasyDialogFragment
+# CozyDialogFragment
 Easy to use API based on DialogFragment
 
 
