@@ -14,6 +14,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroupOverlay;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.LinearInterpolator;
 
@@ -45,6 +46,7 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
     private static final String SAVED_USE_SHOW_ANIMATION = "SAVED_USE_SHOW_ANIMATION";
     private static final String SAVED_USE_DISMISS_ANIMATION = "SAVED_USE_DISMISS_ANIMATION";
     private static final String SAVED_USE_DIM_ANIMATION = "SAVED_USE_DIM_ANIMATION";
+    private static final String SAVED_STATUS_FOLLOW_DIALOG_DEFAULT = "SAVED_STATUS_FOLLOW_DIALOG_DEFAULT";
 
     private static final int ALPHA_MAX = 255;
 
@@ -61,9 +63,13 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
     private boolean mUseDimAnimation = true;
     //show or dismiss state used to dim animation callback
     private boolean mDimDismiss = false;
+    //status bar font mode light or dark,if default status bar font will white
+    private boolean mStatusFontFollowDefault = true;
 
     //runnable list execute on animation end
     private List<Runnable> mDismissActions;
+    //whether called dismiss
+    private boolean mDismissed;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,6 +83,7 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
             mUseShowAnimation = savedInstanceState.getBoolean(SAVED_USE_SHOW_ANIMATION, true);
             mUseDismissAnimation = savedInstanceState.getBoolean(SAVED_USE_DISMISS_ANIMATION, true);
             mUseDimAnimation = savedInstanceState.getBoolean(SAVED_USE_DIM_ANIMATION, true);
+            mStatusFontFollowDefault = savedInstanceState.getBoolean(SAVED_STATUS_FOLLOW_DIALOG_DEFAULT, true);
         }
     }
 
@@ -90,6 +97,7 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
         outState.putBoolean(SAVED_USE_SHOW_ANIMATION, mUseShowAnimation);
         outState.putBoolean(SAVED_USE_DISMISS_ANIMATION, mUseDismissAnimation);
         outState.putBoolean(SAVED_USE_DIM_ANIMATION, mUseDimAnimation);
+        outState.putBoolean(SAVED_STATUS_FOLLOW_DIALOG_DEFAULT, mStatusFontFollowDefault);
         super.onSaveInstanceState(outState);
     }
 
@@ -112,7 +120,14 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
             ((IAnimDialog) getDialog()).setOnAnimInterceptCallback(this);
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            getDialog().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+            Window window = getDialog().getWindow();
+            if (!mStatusFontFollowDefault) {
+                window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+            } else {
+                WindowManager.LayoutParams layoutParams = window.getAttributes();
+                layoutParams.dimAmount = 0f;
+                window.setAttributes(layoutParams);
+            }
             removeDim();
 
             //状态恢复，直接设置阴影，需通过 post 方法否则可能不起作用
@@ -196,6 +211,10 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
      * @param stateLoss AllowingStateLoss
      */
     private void dismissWithAnimation(final boolean stateLoss) {
+        if (mDismissed) {
+            return;
+        }
+        mDismissed = true;
         if (mUseDismissAnimation) {
             if (getDialog() != null && getDialog().getWindow() != null) {
                 View targetView = getDialog().getWindow().getDecorView();
@@ -585,5 +604,15 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
      */
     public void setUseDimAnimation(boolean useDimAnimation) {
         mUseDimAnimation = useDimAnimation;
+    }
+
+    /**
+     * Sets whether status bar mode follow DialogFragment default,
+     * if true status bar font will white else status bar font color will follow activity status bar
+     *
+     * @param statusFontFollowDefault whether status bar mode follow DialogFragment default
+     */
+    public void setStatusFontFollowDefault(boolean statusFontFollowDefault) {
+        mStatusFontFollowDefault = statusFontFollowDefault;
     }
 }

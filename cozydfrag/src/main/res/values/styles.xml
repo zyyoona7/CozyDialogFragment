@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="EasyDialogFragment" parent="Theme.AppCompat.Light.Dialog.Alert">
+    <style name="BaseDialogFragment" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:colorBackgroundCacheHint">@null</item>
-        <item name="android:windowIsFloating">true</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+    </style>
+    <!--normal style-->
+    <style name="FloatingDialogFragment" parent="BaseDialogFragment">
+        <item name="android:windowIsFloating">true</item>
+    </style>
+    <!--set dialogFragment fullscreen will be use this style-->
+    <style name="NoFloatingDialogFragment" parent="BaseDialogFragment">
+        <item name="android:windowIsFloating">false</item>
     </style>
 </resources>

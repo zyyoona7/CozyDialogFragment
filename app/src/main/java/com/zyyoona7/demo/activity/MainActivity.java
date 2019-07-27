@@ -85,11 +85,13 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> implements O
     private void showDemoDialogFragment() {
         DemoDialogFragment demoDialogFragment = DemoDialogFragment.newInstance();
         demoDialogFragment.setMatchWidth();
-        demoDialogFragment.setMatchHeight();
+        demoDialogFragment.setHeight(300f);
+//        demoDialogFragment.setMatchHeight();
         demoDialogFragment.setBottomGravity();
-        demoDialogFragment.setFullscreen(true);
-        demoDialogFragment.setPaddingHorizontal(20f, 20f);
-        demoDialogFragment.setPaddingVertical(20f, 20f);
+        demoDialogFragment.setFullscreen(true,false,true);
+        demoDialogFragment.setStatusFontFollowDefault(false);
+//        demoDialogFragment.setPaddingHorizontal(20f, 20f);
+//        demoDialogFragment.setPaddingVertical(20f, 20f);
         demoDialogFragment.showAllowingStateLoss(getSupportFragmentManager());
     }
 
@@ -103,6 +105,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> implements O
                 showNormalDialogFragment();
             }
         });
+        normalDialogFragment.setBottomGravity();
         normalDialogFragment.showAllowingStateLoss(getSupportFragmentManager());
     }
 

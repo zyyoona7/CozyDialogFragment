@@ -21,6 +21,7 @@ import androidx.fragment.app.FragmentActivity;
 import com.zyyoona7.cozydfrag.R;
 import com.zyyoona7.cozydfrag.callback.OnDialogClickListener;
 import com.zyyoona7.cozydfrag.callback.OnDialogMultiChoiceClickListener;
+import com.zyyoona7.cozydfrag.helper.CozyHelper;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -50,6 +51,8 @@ public class BaseDialogFragment extends ExternalDialogFragment {
     private static final String SAVED_PADDING_RIGHT = "SAVED_PADDING_RIGHT";
     private static final String SAVED_PADDING_BOTTOM = "SAVED_PADDING_BOTTOM";
     private static final String SAVED_FULLSCREEN = "SAVED_FULLSCREEN";
+    private static final String SAVED_HIDE_STATUS_BAR = "SAVED_HIDE_STATUS_BAR";
+    private static final String SAVED_STATUS_BAR_LIGHT_MODE = "SAVED_STATUS_BAR_LIGHT_MODE";
 
     protected FragmentActivity mActivity;
 
@@ -68,7 +71,15 @@ public class BaseDialogFragment extends ExternalDialogFragment {
     private int mPaddingTop = -1;
     private int mPaddingRight = -1;
     private int mPaddingBottom = -1;
+    //全屏并且适配导航栏的情况需要设置
+    //<item name="android:windowIsFloating">false</item>
+    //否则导航栏会被遮挡，如果没有导航栏则不影响
+    //PS:windowIsFloating=true 适配导航栏太复杂
     private boolean mFullscreen = false;
+    //全屏情况，是否隐藏状态栏 >4.4
+    private boolean mHideStatusBar = false;
+    //全屏情况，是否是浅色模式，即状态栏字体为深色>6.0
+    private boolean mStatusBarLightMode = false;
 
     //DialogFragment id
     private int mRequestId = -1;
@@ -92,8 +103,6 @@ public class BaseDialogFragment extends ExternalDialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //设置Style 透明背景，No Title
-        setStyle(AppCompatDialogFragment.STYLE_NO_TITLE, R.style.EasyDialogFragment);
         if (savedInstanceState != null) {
             mDimAmount = savedInstanceState.getFloat(SAVED_DIM_AMOUNT, 0.5f);
             mGravity = savedInstanceState.getInt(SAVED_GRAVITY, Gravity.CENTER);
@@ -111,7 +120,12 @@ public class BaseDialogFragment extends ExternalDialogFragment {
             mPaddingRight = savedInstanceState.getInt(SAVED_PADDING_RIGHT, -1);
             mPaddingBottom = savedInstanceState.getInt(SAVED_PADDING_BOTTOM, -1);
             mFullscreen = savedInstanceState.getBoolean(SAVED_FULLSCREEN, false);
+            mHideStatusBar = savedInstanceState.getBoolean(SAVED_HIDE_STATUS_BAR, true);
+            mStatusBarLightMode = savedInstanceState.getBoolean(SAVED_STATUS_BAR_LIGHT_MODE, false);
         }
+        //设置Style 透明背景，No Title
+        setStyle(AppCompatDialogFragment.STYLE_NO_TITLE,
+                mFullscreen ? R.style.NoFloatingDialogFragment : R.style.FloatingDialogFragment);
     }
 
     @Override
@@ -130,6 +144,8 @@ public class BaseDialogFragment extends ExternalDialogFragment {
         outState.putInt(SAVED_PADDING_RIGHT, mPaddingRight);
         outState.putInt(SAVED_PADDING_BOTTOM, mPaddingBottom);
         outState.putBoolean(SAVED_FULLSCREEN, mFullscreen);
+        outState.putBoolean(SAVED_HIDE_STATUS_BAR, mHideStatusBar);
+        outState.putBoolean(SAVED_STATUS_BAR_LIGHT_MODE, mStatusBarLightMode);
         super.onSaveInstanceState(outState);
     }
 
@@ -141,7 +157,7 @@ public class BaseDialogFragment extends ExternalDialogFragment {
                 || getDialog().getWindow() == null) {
             return;
         }
-        Window window = getDialog().getWindow();
+        final Window window = getDialog().getWindow();
         //set WindowManager LayoutParams
         WindowManager.LayoutParams layoutParams = window.getAttributes();
         layoutParams.dimAmount = mDimAmount;
@@ -154,6 +170,11 @@ public class BaseDialogFragment extends ExternalDialogFragment {
                 || mHeight == ViewGroup.LayoutParams.WRAP_CONTENT) {
             layoutParams.height = mHeight;
         }
+        //if fullscreen set width,height match_parent
+        if (mFullscreen) {
+            layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+            layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
+        }
         window.setAttributes(layoutParams);
 
         View decor = window.getDecorView();
@@ -163,7 +184,17 @@ public class BaseDialogFragment extends ExternalDialogFragment {
                 mPaddingBottom >= 0 ? mPaddingBottom : decor.getPaddingBottom());
 
         if (mFullscreen) {
-            window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            if (mHideStatusBar) {
+                window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            } else {
+                CozyHelper.setTransparentStatusBar(window);
+                if (mStatusBarLightMode) {
+                    //设置状态栏字体颜色只对全屏有效，如果不是Match_parent即使设置了也不起作用
+                    CozyHelper.setStatusBarLightMode(window, true);
+                }
+            }
+            //全屏时适配刘海屏
+            CozyHelper.fitNotch(window);
         }
         if (mAnimationStyle != 0) {
             window.setWindowAnimations(mAnimationStyle);
@@ -174,6 +205,17 @@ public class BaseDialogFragment extends ExternalDialogFragment {
         if (isCancelable()) {
             getDialog().setCanceledOnTouchOutside(mCanceledOnTouchOutside);
         }
+    }
+
+    /**
+     * whether window set flag
+     *
+     * @param window Window
+     * @param flag   flag
+     * @return whether window set flag
+     */
+    protected boolean hasFlag(Window window, int flag) {
+        return window != null && (window.getAttributes().flags & flag) == flag;
     }
 
     /**
@@ -530,12 +572,41 @@ public class BaseDialogFragment extends ExternalDialogFragment {
     }
 
     /**
-     * Sets whether Window fullscreen,must with match_height and immersion status bar
-     *
-     * @param fullscreen whether Window fullscreen
+     * @return whether hide status bar
      */
-    public void setFullscreen(boolean fullscreen) {
+    public boolean isHideStatusBar() {
+        return mHideStatusBar;
+    }
+
+    /**
+     * Sets whether Window fullscreen
+     * @param fullscreen
+     */
+    public void setFullscreen(boolean fullscreen){
+        setFullscreen(fullscreen,true,false);
+    }
+
+    /**
+     * Sets whether Window fullscreen
+     *
+     * @param fullscreen    whether Window fullscreen
+     * @param hideStatusBar whether hide status bar
+     */
+    public void setFullscreen(boolean fullscreen, boolean hideStatusBar) {
+        setFullscreen(fullscreen, hideStatusBar, false);
+    }
+
+    /**
+     * Sets whether Window fullscreen
+     *
+     * @param fullscreen    whether Window fullscreen
+     * @param hideStatusBar whether hide status bar
+     * @param isLightMode   whether status bar light mode
+     */
+    public void setFullscreen(boolean fullscreen, boolean hideStatusBar, boolean isLightMode) {
         mFullscreen = fullscreen;
+        mHideStatusBar = hideStatusBar;
+        mStatusBarLightMode = isLightMode;
     }
 
     /**
