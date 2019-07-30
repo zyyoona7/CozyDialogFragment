@@ -6,7 +6,9 @@ import android.graphics.Color;
 import android.view.View;
 
 import com.gyf.immersionbar.ImmersionBar;
+import com.zyyoona7.cozydfrag.helper.AnimatorHelper;
 import com.zyyoona7.demo.AnimDialogFragment;
+import com.zyyoona7.demo.CozyAnimDialogFragment;
 import com.zyyoona7.demo.DemoDialogFragment;
 import com.zyyoona7.demo.NormalDialogFragment;
 import com.zyyoona7.demo.R;
@@ -65,6 +67,13 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> implements O
                 showDemoDialogFragment();
             }
         });
+
+        mBinding.btnCozyDialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showCozyAnmDialogFragment();
+            }
+        });
     }
 
     private void showAnimDialogFragment() {
@@ -79,6 +88,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> implements O
         dialogFragment.setDimAmount(0.5f);
         dialogFragment.setRequestId(requestId);
         dialogFragment.setDimColor(Color.RED);
+//        dialogFragment.setAnimationStyle(R.style.DialogScaleAnim);
         dialogFragment.showAllowingStateLoss(getSupportFragmentManager());
     }
 
@@ -107,6 +117,15 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> implements O
         });
         normalDialogFragment.setBottomGravity();
         normalDialogFragment.showAllowingStateLoss(getSupportFragmentManager());
+    }
+
+    private void showCozyAnmDialogFragment(){
+        CozyAnimDialogFragment dialog=CozyAnimDialogFragment.newInstance();
+        dialog.setShowAnimType(AnimatorHelper.ANIM_ZOOM_IN);
+        dialog.setShowInterpolatorType(AnimatorHelper.INTERPOLATOR_LINEAR);
+        dialog.setDismissAnimType(AnimatorHelper.ANIM_ZOOM_OUT);
+        dialog.setDismissInterpolatorType(AnimatorHelper.INTERPOLATOR_LINEAR);
+        dialog.showAllowingStateLoss(getSupportFragmentManager());
     }
 
     @Override

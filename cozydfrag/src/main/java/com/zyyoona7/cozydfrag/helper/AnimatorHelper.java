@@ -11,7 +11,11 @@ import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.OvershootInterpolator;
 
+import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 /**
  * some ObjectAnimator utils
@@ -20,6 +24,27 @@ import androidx.annotation.NonNull;
  * @since 2019/07/24
  */
 public class AnimatorHelper {
+
+    /**
+     * Animator type
+     */
+    public static final int ANIM_ZOOM_IN = 0;
+    public static final int ANIM_ZOOM_OUT = 1;
+    public static final int ANIM_BOTTOM_SLIDE_IN = 2;
+    public static final int ANIM_BOTTOM_SLIDE_OUT = 3;
+    public static final int ANIM_TOP_SLIDE_IN = 4;
+    public static final int ANIM_TOP_SLIDE_OUT = 5;
+
+    /**
+     * Interpolator type
+     */
+    public static final int INTERPOLATOR_SPRING = 0;
+    public static final int INTERPOLATOR_LINEAR = 1;
+    public static final int INTERPOLATOR_ACCELERATE = 2;
+    public static final int INTERPOLATOR_DECELERATE = 3;
+    public static final int INTERPOLATOR_ACCE_DECE = 4;
+    public static final int INTERPOLATOR_OVERSHOT = 5;
+    public static final int INTERPOLATOR_BOUNCE = 6;
 
     private AnimatorHelper() {
     }
@@ -66,31 +91,31 @@ public class AnimatorHelper {
                 .ofFloat(target, "translationY", 0, -target.getHeight());
     }
 
-    public static Interpolator spring(){
+    public static Interpolator spring() {
         return new SpringInterpolator();
     }
 
-    public static Interpolator linear(){
+    public static Interpolator linear() {
         return new LinearInterpolator();
     }
 
-    public static Interpolator accelerate(){
+    public static Interpolator accelerate() {
         return new AccelerateInterpolator();
     }
 
-    public static Interpolator decelerate(){
+    public static Interpolator decelerate() {
         return new DecelerateInterpolator();
     }
 
-    public static Interpolator accelerateDecelerate(){
+    public static Interpolator accelerateDecelerate() {
         return new AccelerateDecelerateInterpolator();
     }
 
-    public static Interpolator overshot(){
+    public static Interpolator overshot() {
         return new OvershootInterpolator();
     }
 
-    public static Interpolator bounce(){
+    public static Interpolator bounce() {
         return new BounceInterpolator();
     }
 
@@ -112,4 +137,15 @@ public class AnimatorHelper {
                     (2 * Math.PI) / mFactor) + 1);
         }
     }
+
+    @IntDef({ANIM_ZOOM_IN, ANIM_ZOOM_OUT, ANIM_BOTTOM_SLIDE_IN,
+            ANIM_BOTTOM_SLIDE_OUT, ANIM_TOP_SLIDE_IN, ANIM_TOP_SLIDE_OUT})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface AnimType {}
+
+    @IntDef({INTERPOLATOR_SPRING,INTERPOLATOR_LINEAR,INTERPOLATOR_ACCELERATE,
+            INTERPOLATOR_DECELERATE,INTERPOLATOR_ACCE_DECE,INTERPOLATOR_OVERSHOT,
+            INTERPOLATOR_BOUNCE})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface InterpolatorType{}
 }

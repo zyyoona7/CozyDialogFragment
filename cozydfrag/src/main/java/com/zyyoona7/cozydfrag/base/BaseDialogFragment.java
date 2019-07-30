@@ -580,10 +580,11 @@ public class BaseDialogFragment extends ExternalDialogFragment {
 
     /**
      * Sets whether Window fullscreen
+     *
      * @param fullscreen
      */
-    public void setFullscreen(boolean fullscreen){
-        setFullscreen(fullscreen,true,false);
+    public void setFullscreen(boolean fullscreen) {
+        setFullscreen(fullscreen, true, false);
     }
 
     /**

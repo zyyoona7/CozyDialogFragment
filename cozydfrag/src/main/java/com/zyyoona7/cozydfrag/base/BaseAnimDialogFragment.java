@@ -21,6 +21,7 @@ import android.view.animation.LinearInterpolator;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.annotation.StyleRes;
 
 import com.zyyoona7.cozydfrag.callback.OnAnimInterceptCallback;
 import com.zyyoona7.cozydfrag.dialog.AnimDialog;
@@ -48,13 +49,14 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
     private static final String SAVED_USE_DIM_ANIMATION = "SAVED_USE_DIM_ANIMATION";
     private static final String SAVED_STATUS_FOLLOW_DIALOG_DEFAULT = "SAVED_STATUS_FOLLOW_DIALOG_DEFAULT";
 
+    private static final int DEFAULT_DURATION=300;
     private static final int ALPHA_MAX = 255;
 
     private Drawable mDimDrawable;
     private ObjectAnimator mDimAnimator;
 
-    private int mShowDuration = 250;
-    private int mDismissDuration = 250;
+    private int mShowDuration = DEFAULT_DURATION;
+    private int mDismissDuration = DEFAULT_DURATION;
     private int mDimShowDuration = -1;
     private int mDimDismissDuration = -1;
     private int mDimColor = Color.BLACK;
@@ -111,8 +113,9 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        //setAnimationStyle will not use custom animation
         if (getDialog() == null || !getShowsDialog()
-                || getDialog().getWindow() == null) {
+                || getDialog().getWindow() == null || getAnimationStyle() != 0) {
             return;
         }
         getDialog().setOnShowListener(this);
@@ -215,6 +218,15 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
             return;
         }
         mDismissed = true;
+        //use animationStyle will not use custom animation
+        if (getAnimationStyle() != 0) {
+            if (stateLoss) {
+                super.dismissAllowingStateLoss();
+            } else {
+                super.dismiss();
+            }
+            return;
+        }
         if (mUseDismissAnimation) {
             if (getDialog() != null && getDialog().getWindow() != null) {
                 View targetView = getDialog().getWindow().getDecorView();
@@ -337,6 +349,7 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
             mDimAnimator = null;
         }
         safeRemoveDim();
+        mDismissed = false;
     }
 
     /**
@@ -474,16 +487,6 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
      * @param stateLoss  whether allowing state loss
      */
     protected abstract void onStartDismissAnimation(@NonNull View targetView, boolean stateLoss);
-
-    /**
-     * use custom animation so prevent window animation style.
-     *
-     * @param animationStyle Window animation style
-     */
-    @Override
-    public void setAnimationStyle(int animationStyle) {
-//        super.setAnimationStyle(animationStyle);
-    }
 
     /**
      * @return show animation duration

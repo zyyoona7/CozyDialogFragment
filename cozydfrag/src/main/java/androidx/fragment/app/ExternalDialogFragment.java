@@ -175,12 +175,12 @@ public class ExternalDialogFragment extends DialogFragment {
         return this.getClass().getSimpleName();
     }
 
-    @Override
-    public void onDestroyView() {
-        // bug in the compatibility library
-        if (getDialog() != null && getRetainInstance()) {
-            getDialog().setDismissMessage(null);
-        }
-        super.onDestroyView();
-    }
+//    @Override
+//    public void onDestroyView() {
+//        // bug in the compatibility library
+//        if (getDialog() != null && getRetainInstance()) {
+//            getDialog().setDismissMessage(null);
+//        }
+//        super.onDestroyView();
+//    }
 }
