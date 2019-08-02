@@ -3,6 +3,7 @@ package com.zyyoona7.demo.activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Handler;
 import android.view.View;
 
 import com.gyf.immersionbar.ImmersionBar;
@@ -47,6 +48,8 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> implements O
             public void onClick(View view) {
 //                showAnimDialogFragment(1);
                 showAnimDialogFragment(0);
+                showAnimDialogFragment();
+                showAnimDialogFragment();
 //                new Handler().postDelayed(new Runnable() {
 //                    @Override
 //                    public void run() {
@@ -64,6 +67,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> implements O
         mBinding.btnDemoDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                showDemoDialogFragment();
                 showDemoDialogFragment();
             }
         });
@@ -90,19 +94,38 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> implements O
         dialogFragment.setDimColor(Color.RED);
 //        dialogFragment.setAnimationStyle(R.style.DialogScaleAnim);
         dialogFragment.showAllowingStateLoss(getSupportFragmentManager());
+        dialogFragment.showAllowingStateLoss(getSupportFragmentManager());
     }
 
+    private DemoDialogFragment mDemoDialogFragment;
+
     private void showDemoDialogFragment() {
-        DemoDialogFragment demoDialogFragment = DemoDialogFragment.newInstance();
-        demoDialogFragment.setMatchWidth();
-        demoDialogFragment.setHeight(300f);
-//        demoDialogFragment.setMatchHeight();
-        demoDialogFragment.setBottomGravity();
-        demoDialogFragment.setFullscreen(true,false,true);
-        demoDialogFragment.setStatusFontFollowDefault(false);
-//        demoDialogFragment.setPaddingHorizontal(20f, 20f);
-//        demoDialogFragment.setPaddingVertical(20f, 20f);
-        demoDialogFragment.showAllowingStateLoss(getSupportFragmentManager());
+        if (mDemoDialogFragment == null) {
+            mDemoDialogFragment = DemoDialogFragment.newInstance();
+            mDemoDialogFragment.setMatchWidth();
+            mDemoDialogFragment.setHeight(300f);
+            mDemoDialogFragment.setBottomGravity();
+        }
+
+        mDemoDialogFragment.showAllowingStateLoss(getSupportFragmentManager());
+
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                mDemoDialogFragment.showAllowingStateLoss(getSupportFragmentManager());
+//            }
+//        }, 10);
+
+//        DemoDialogFragment demoDialogFragment = DemoDialogFragment.newInstance();
+//        demoDialogFragment.setMatchWidth();
+//        demoDialogFragment.setHeight(300f);
+////        demoDialogFragment.setMatchHeight();
+//        demoDialogFragment.setBottomGravity();
+//        demoDialogFragment.setFullscreen(true,false,true);
+//        demoDialogFragment.setStatusFontFollowDefault(false);
+////        demoDialogFragment.setPaddingHorizontal(20f, 20f);
+////        demoDialogFragment.setPaddingVertical(20f, 20f);
+//        demoDialogFragment.showAllowingStateLoss(getSupportFragmentManager());
     }
 
     private void showNormalDialogFragment() {

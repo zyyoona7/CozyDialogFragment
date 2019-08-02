@@ -15,8 +15,6 @@ import androidx.dynamicanimation.animation.DynamicAnimation;
 import androidx.dynamicanimation.animation.SpringAnimation;
 import androidx.dynamicanimation.animation.SpringForce;
 
-import com.gyf.immersionbar.ImmersionBar;
-import com.zyyoona7.cozydfrag.helper.CozyHelper;
 import com.zyyoona7.cozydfrag.base.BaseAnimDialogFragment;
 
 public class DemoDialogFragment extends BaseAnimDialogFragment {
@@ -59,18 +57,20 @@ public class DemoDialogFragment extends BaseAnimDialogFragment {
 
     @Override
     protected void onCreateShowAnimation(@NonNull View targetView) {
-        if (mSpringAnimation == null) {
-            mSpringAnimation = new SpringAnimation(targetView, DynamicAnimation.TRANSLATION_Y);
-            SpringForce springForce = new SpringForce(0);
-            springForce.setDampingRatio(SpringForce.DAMPING_RATIO_MEDIUM_BOUNCY);
-            springForce.setStiffness(SpringForce.STIFFNESS_LOW);
-            mSpringAnimation.setSpring(springForce);
-            mSpringAnimation.setStartValue(targetView.getHeight());
-        }
+        Log.d(TAG, "onCreateShowAnimation: ");
+        //target view 每次执行完生命周期时都会变，因为 SpringAnimation 没有单独的更新 target 方法
+        //所以每次都初始化一次
+        mSpringAnimation = new SpringAnimation(targetView, DynamicAnimation.TRANSLATION_Y);
+        SpringForce springForce = new SpringForce(0);
+        springForce.setDampingRatio(SpringForce.DAMPING_RATIO_MEDIUM_BOUNCY);
+        springForce.setStiffness(SpringForce.STIFFNESS_LOW);
+        mSpringAnimation.setSpring(springForce);
+        mSpringAnimation.setStartValue(targetView.getHeight());
     }
 
     @Override
     protected void onStartShowAnimation(@NonNull View targetView) {
+        Log.d(TAG, "onStartShowAnimation: ");
         if (mSpringAnimation == null) {
             return;
         }
@@ -79,6 +79,7 @@ public class DemoDialogFragment extends BaseAnimDialogFragment {
 
     @Override
     protected void onCreateDismissAnimation(@NonNull View targetView, final boolean stateLoss) {
+        Log.d(TAG, "onCreateDismissAnimation: ");
         if (mDismissAnimator == null) {
             mDismissAnimator = ObjectAnimator.ofFloat(targetView, "translationY",
                     0, targetView.getHeight());
@@ -89,10 +90,13 @@ public class DemoDialogFragment extends BaseAnimDialogFragment {
                 }
             });
         }
+        //target view 每次执行完生命周期时都会变
+        mDismissAnimator.setTarget(targetView);
     }
 
     @Override
     protected void onStartDismissAnimation(@NonNull View targetView, boolean stateLoss) {
+        Log.d(TAG, "onStartDismissAnimation: ");
         if (mSpringAnimation != null) {
             mSpringAnimation.cancel();
         }

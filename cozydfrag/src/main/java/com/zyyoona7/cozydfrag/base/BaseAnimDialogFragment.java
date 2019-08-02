@@ -10,6 +10,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +22,6 @@ import android.view.animation.LinearInterpolator;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.annotation.StyleRes;
 
 import com.zyyoona7.cozydfrag.callback.OnAnimInterceptCallback;
 import com.zyyoona7.cozydfrag.dialog.AnimDialog;
@@ -49,7 +49,7 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
     private static final String SAVED_USE_DIM_ANIMATION = "SAVED_USE_DIM_ANIMATION";
     private static final String SAVED_STATUS_FOLLOW_DIALOG_DEFAULT = "SAVED_STATUS_FOLLOW_DIALOG_DEFAULT";
 
-    private static final int DEFAULT_DURATION=300;
+    private static final int DEFAULT_DURATION = 300;
     private static final int ALPHA_MAX = 255;
 
     private Drawable mDimDrawable;
@@ -118,6 +118,7 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
                 || getDialog().getWindow() == null || getAnimationStyle() != 0) {
             return;
         }
+        Log.d("BaseAnimDialogFragment", "onActivityCreated: ");
         getDialog().setOnShowListener(this);
         if (getDialog() instanceof IAnimDialog) {
             ((IAnimDialog) getDialog()).setOnAnimInterceptCallback(this);
@@ -154,8 +155,10 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
 
     @Override
     public void onShow(DialogInterface dialog) {
+        //show/dismiss very very fast,dismiss may occur before onShow.
         if (mUseShowAnimation) {
-            if (getDialog() != null && getDialog().getWindow() != null) {
+            if (getDialog() != null && getDialog().getWindow() != null
+                    && !mDismissed) {
                 View targetView = getDialog().getWindow().getDecorView();
                 onCreateShowAnimation(targetView);
                 //start dim show animation first
@@ -164,7 +167,7 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
                 onStartShowAnimation(targetView);
             }
         } else {
-            if (mUseDimAnimation) {
+            if (mUseDimAnimation && !mDismissed) {
                 startDimShowAnimation();
             }
         }
@@ -194,6 +197,7 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
     public void dismiss() {
         dismissWithAnimation(false);
     }
+
 
     @Override
     protected void dismissInternal(boolean allowStateLoss) {
@@ -342,6 +346,11 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
 
     @Override
     public void onDestroyView() {
+        //fix Activity has leaked window that was originally added exception
+        //because we intercepted dismiss if !dismissByDf
+        if (getDialog() instanceof IAnimDialog) {
+            ((IAnimDialog) getDialog()).setDismissByDf(true);
+        }
         super.onDestroyView();
         if (mDimAnimator != null) {
             mDimAnimator.cancel();

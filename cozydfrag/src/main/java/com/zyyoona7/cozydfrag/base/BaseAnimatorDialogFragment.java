@@ -39,6 +39,11 @@ public abstract class BaseAnimatorDialogFragment extends BaseAnimDialogFragment 
                 });
             }
         }
+        if (mShowAnimator != null) {
+            //update target view.
+            //the target view will changed by onCreateView,different from before.
+            mShowAnimator.setTarget(targetView);
+        }
     }
 
     @Override
@@ -55,6 +60,7 @@ public abstract class BaseAnimatorDialogFragment extends BaseAnimDialogFragment 
         if (mDismissAnimator == null) {
             mDismissAnimator = onCreateDismissAnimator(targetView);
             if (mDismissAnimator != null) {
+                mDismissAnimator.setTarget(targetView);
                 mDismissAnimator.addListener(new AnimatorListenerAdapter() {
 
                     @Override
@@ -70,6 +76,11 @@ public abstract class BaseAnimatorDialogFragment extends BaseAnimDialogFragment 
                     }
                 });
             }
+        }
+        if (mDismissAnimator != null) {
+            //update target view.
+            //the target view will changed by onCreateView,different from before.
+            mDismissAnimator.setTarget(targetView);
         }
     }
 
@@ -101,12 +112,14 @@ public abstract class BaseAnimatorDialogFragment extends BaseAnimDialogFragment 
     public void onDestroyView() {
         super.onDestroyView();
         if (mShowAnimator != null) {
+            mShowAnimator.setTarget(null);
             mShowAnimator.cancel();
             mShowAnimator.removeAllListeners();
             mShowAnimator = null;
         }
 
         if (mDismissAnimator != null) {
+            mDismissAnimator.setTarget(null);
             mDismissAnimator.cancel();
             mDismissAnimator.removeAllListeners();
             mDismissAnimator = null;

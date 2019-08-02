@@ -1,6 +1,7 @@
 package com.zyyoona7.cozydfrag.dialog;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.MotionEvent;
 
 import androidx.annotation.NonNull;
@@ -87,5 +88,6 @@ public class AnimDialog extends AppCompatDialog implements IAnimDialog {
         if (mAnimDialogHelper != null) {
             mAnimDialogHelper.onDetachFromWindow();
         }
+        Log.d("AnimDialog", "onDetachedFromWindow: ");
     }
 }
