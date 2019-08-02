@@ -50,11 +50,6 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> implements O
                 showAnimDialogFragment(0);
                 showAnimDialogFragment();
                 showAnimDialogFragment();
-//                new Handler().postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                    }
-//                },3000);
             }
         });
         mBinding.btnNormalDialog.setOnClickListener(new View.OnClickListener() {
@@ -67,7 +62,6 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> implements O
         mBinding.btnDemoDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showDemoDialogFragment();
                 showDemoDialogFragment();
             }
         });
@@ -94,7 +88,6 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> implements O
         dialogFragment.setDimColor(Color.RED);
 //        dialogFragment.setAnimationStyle(R.style.DialogScaleAnim);
         dialogFragment.showAllowingStateLoss(getSupportFragmentManager());
-        dialogFragment.showAllowingStateLoss(getSupportFragmentManager());
     }
 
     private DemoDialogFragment mDemoDialogFragment;
@@ -109,12 +102,6 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> implements O
 
         mDemoDialogFragment.showAllowingStateLoss(getSupportFragmentManager());
 
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                mDemoDialogFragment.showAllowingStateLoss(getSupportFragmentManager());
-//            }
-//        }, 10);
 
 //        DemoDialogFragment demoDialogFragment = DemoDialogFragment.newInstance();
 //        demoDialogFragment.setMatchWidth();
