@@ -55,7 +55,7 @@ public class CozyHelper {
     @Nullable
     public static <T extends DialogFragment> DialogFragment findDialogFragment(FragmentManager manager,
                                                                                Class<T> dialog) {
-        return findDialogFragment(manager, dialog.getSimpleName());
+        return findDialogFragment(manager, dialog.getName());
     }
 
     /**
@@ -80,7 +80,7 @@ public class CozyHelper {
      */
     public static <T extends DialogFragment> void dismiss(FragmentManager manager,
                                                           Class<T> dialog) {
-        dismiss(manager, dialog.getSimpleName());
+        dismiss(manager, dialog.getName());
     }
 
     /**
@@ -105,7 +105,7 @@ public class CozyHelper {
      */
     public static <T extends DialogFragment> void dismissAllowingStateLoss(FragmentManager manager,
                                                                            Class<T> dialog) {
-        dismissAllowingStateLoss(manager, dialog.getSimpleName());
+        dismissAllowingStateLoss(manager, dialog.getName());
     }
 
     /**
@@ -139,7 +139,7 @@ public class CozyHelper {
      */
     public static <T extends BaseDialogFragment> void dismiss(FragmentManager manager,
                                                               Class<T> dialog, int requestId) {
-        dismiss(manager, dialog.getSimpleName(), requestId);
+        dismiss(manager, dialog.getName(), requestId);
     }
 
     /**
@@ -173,7 +173,7 @@ public class CozyHelper {
      */
     public static <T extends BaseDialogFragment> void dismissAllowingStateLoss(FragmentManager manager,
                                                                                Class<T> dialog, int requestId) {
-        dismissAllowingStateLoss(manager, dialog.getSimpleName(), requestId);
+        dismissAllowingStateLoss(manager, dialog.getName(), requestId);
     }
 
     /**
