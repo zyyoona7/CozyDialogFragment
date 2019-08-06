@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="cozy_alert_style" format="enum">
+        <enum name="material" value="0"/>
+        <enum name="cupertino" value="1"/>
+    </attr>
+    <attr name="cozy_alert_button_orientation" format="enum">
+        <enum name="horizontal" value="0"/>
+        <enum name="vertical" value="1"/>
+    </attr>
+    <attr name="cozy_alert_button_direction" format="enum">
+        <enum name="Ltr" value="0"/>
+        <enum name="Rtl" value="1"/>
+    </attr>
+</resources>
