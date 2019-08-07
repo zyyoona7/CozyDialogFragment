@@ -9,8 +9,9 @@ import android.view.ViewGroup;
 
 import androidx.appcompat.widget.AppCompatButton;
 
-import com.zyyoona7.cozydfrag.alert.DrawableUtils;
+import com.zyyoona7.cozydfrag.alert.helper.DrawableHelper;
 import com.zyyoona7.cozydfrag.alert.R;
+import com.zyyoona7.cozydfrag.alert.helper.UIHelper;
 
 public class ButtonsLayout extends ViewGroup {
 
@@ -56,8 +57,12 @@ public class ButtonsLayout extends ViewGroup {
         mNegativeBtn = findViewById(R.id.btn_negative);
         mPositiveBtn = findViewById(R.id.btn_positive);
 
-        mPositiveBtn.setBackgroundDrawable(DrawableUtils
-                .getAdaptiveRippleDrawable(Color.TRANSPARENT, Color.RED));
+        mPositiveBtn.setBackgroundDrawable(DrawableHelper
+                .createRippleDrawable(Color.WHITE, Color.RED, UIHelper.dp2Px(2f)));
+        mNegativeBtn.setBackgroundDrawable(DrawableHelper
+                .createRippleDrawable(Color.WHITE, Color.RED, UIHelper.dp2Px(2f)));
+        mNeutralBtn.setBackgroundDrawable(DrawableHelper
+                .createRippleDrawable(Color.TRANSPARENT, Color.RED, UIHelper.dp2Px(2f)));
     }
 
     @Override
