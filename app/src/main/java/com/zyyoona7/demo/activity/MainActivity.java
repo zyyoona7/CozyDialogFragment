@@ -31,7 +31,6 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> implements O
 
     @Override
     protected void init() {
-        ImmersionBar.setTitleBar(this, mBinding.toolbar);
     }
 
     @Override

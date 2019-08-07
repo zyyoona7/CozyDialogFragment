@@ -22,7 +22,6 @@ public class FullScreenActivity extends BaseActivity<ActivityFullScreenBinding> 
 
     @Override
     protected void init() {
-        ImmersionBar.setTitleBar(this, mBinding.toolbar);
         BarUtils.setStatusBarVisibility(this, false);
         PNotchUtils.fillNotchForFullScreen(this);
     }

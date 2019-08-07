@@ -29,6 +29,7 @@ public abstract class BaseActivity<VDB extends ViewDataBinding> extends AppCompa
         Toolbar toolbar = findViewById(R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
+            ImmersionBar.setTitleBar(this, toolbar);
         }
         init();
         initListeners();
