@@ -1,2 +1,2 @@
-include ':app', ':cozydfrag', ':cozyalert'
+include ':app', ':cozydfrag', ':cozyalert', ':samplealert'
 rootProject.name='CozyDialogFragment'

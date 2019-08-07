@@ -1,13 +1,8 @@
 package com.zyyoona7.cozydfrag.alert.view;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.ViewGroup;
-
-import com.zyyoona7.cozydfrag.alert.R;
 
 public class ButtonsLayout extends ViewGroup {
 
@@ -32,22 +27,8 @@ public class ButtonsLayout extends ViewGroup {
         this(context, attrs,0);
     }
 
-    @SuppressLint("ResourceType")
     public ButtonsLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        //get style from theme
-        int[] styleAttrs = {R.attr.cozy_alert_style,R.attr.cozy_alert_button_orientation,
-        R.attr.cozy_alert_button_direction};
-        TypedArray ta = context.getTheme().obtainStyledAttributes(styleAttrs);
-        try {
-            mStyle = ta.getInt(0, STYLE_MATERIAL);
-            mOrientation=ta.getInt(1,ORIENTATION_HORIZONTAL);
-            mDirection=ta.getInt(2,DIRECTION_LTR);
-        } catch (Exception e){
-            Log.d("ButtonsLayout", "get attr cause exception:"+e);
-        }finally {
-            ta.recycle();
-        }
     }
 
     @Override
