@@ -26,13 +26,13 @@ public class CozyDialogFragment extends BaseAnimatorDialogFragment {
     private static final String SAVED_DISMISS_INTERPOLATOR_TYPE = "SAVED_DISMISS_INTERPOLATOR_TYPE";
 
     @AnimatorHelper.AnimType
-    private int mShowAnimType;
+    private int mShowAnimType=AnimatorHelper.ANIM_ZOOM_IN;
     @AnimatorHelper.InterpolatorType
-    private int mShowInterpolatorType;
+    private int mShowInterpolatorType=AnimatorHelper.INTERPOLATOR_ACCE_DECE;
     @AnimatorHelper.AnimType
-    private int mDismissAnimType;
+    private int mDismissAnimType=AnimatorHelper.ANIM_ZOOM_OUT;
     @AnimatorHelper.InterpolatorType
-    private int mDismissInterpolatorType;
+    private int mDismissInterpolatorType=AnimatorHelper.INTERPOLATOR_ACCE_DECE;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
