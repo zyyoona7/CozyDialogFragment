@@ -23,7 +23,7 @@ public class CozyAlertDialogFragment extends CozyDialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
+        return inflater.inflate(R.layout.cozy_dialog_fragment_alert,container,false);
     }
 
     @Override

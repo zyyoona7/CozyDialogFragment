@@ -37,6 +37,19 @@ public class CozyAnimDialogFragment extends CozyDialogFragment {
                 }
             }
         });
+        builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        builder.setNeutralButton("Neutral", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
         return builder.create();
     }
 }
