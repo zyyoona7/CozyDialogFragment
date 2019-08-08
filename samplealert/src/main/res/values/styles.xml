@@ -6,6 +6,19 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="cozy_alert_style">cupertino</item>
+        <item name="cozy_alert_btn_pos_textAppearance">@style/PositiveTextAppearance</item>
+<!--        <item name="cozy_alert_btn_height">35dp</item>-->
     </style>
 
+    <style name="PositiveTextAppearance" parent="TextAppearance.AppCompat.Widget.Button">
+        <item name="android:textSize">14sp</item>
+<!--        <item name="android:textStyle">bold</item>-->
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
+    <style name="DefaultMaterialAlert">
+        <item name="cozy_alert_style">material</item>
+        <item name="cozy_alert_btn_height">60dp</item>
+        <item name="cozy_alert_btn_pos_textAppearance">@style/PositiveTextAppearance</item>
+    </style>
 </resources>

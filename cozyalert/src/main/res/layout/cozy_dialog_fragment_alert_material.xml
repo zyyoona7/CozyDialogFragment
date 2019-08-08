@@ -4,5 +4,5 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include layout="@layout/cozy_layout_alert_buttons"/>
+    <include layout="@layout/cozy_layout_alert_buttons_material"/>
 </LinearLayout>

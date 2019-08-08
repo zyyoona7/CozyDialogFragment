@@ -28,7 +28,7 @@ public class CozyAnimDialogFragment extends CozyDialogFragment {
         AnimAlertDialog.Builder builder = new AnimAlertDialog.Builder(mActivity);
         builder.setTitle("Anim");
         builder.setMessage("Anim Dialog" + getRequestId());
-        builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, final int which) {
                 OnDialogClickListener clickListener = getDialogClickListener();
@@ -37,14 +37,14 @@ public class CozyAnimDialogFragment extends CozyDialogFragment {
                 }
             }
         });
-        builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
             }
         });
 
-        builder.setNeutralButton("Neutral", new DialogInterface.OnClickListener() {
+        builder.setNeutralButton("中立", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 

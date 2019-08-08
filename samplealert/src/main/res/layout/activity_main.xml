@@ -17,14 +17,27 @@
             app:titleTextColor="#FFFFFF" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_alert"
+            android:id="@+id/btn_cupertino"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Alert"
+            android:text="cupertino"
+            app:layout_constraintBottom_toTopOf="@id/btn_material"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_material"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="material"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/btn_cupertino"
+            app:layout_constraintVertical_chainStyle="packed" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

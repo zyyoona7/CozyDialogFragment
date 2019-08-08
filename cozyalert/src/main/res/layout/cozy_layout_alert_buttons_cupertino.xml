@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zyyoona7.cozydfrag.alert.view.button.CupertinoButtonsLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/buttons_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+<!--    <androidx.appcompat.widget.AppCompatButton-->
+<!--        android:id="@+id/btn_neutral"-->
+<!--        style="@style/CozyAlertButtonStyle"-->
+<!--        android:background="@android:color/holo_green_dark"-->
+<!--        android:text="neutralneutral"-->
+<!--        tools:text="neutral" />-->
+
+<!--    <androidx.appcompat.widget.AppCompatButton-->
+<!--        android:id="@+id/btn_negative"-->
+<!--        style="@style/CozyAlertButtonStyle"-->
+<!--        android:background="@android:color/holo_red_dark"-->
+<!--        android:text="cancelcancelcancel"-->
+<!--        android:visibility="gone"-->
+<!--        tools:text="negative" />-->
+
+<!--    <androidx.appcompat.widget.AppCompatButton-->
+<!--        android:id="@+id/btn_positive"-->
+<!--        style="@style/CozyAlertButtonStyle"-->
+<!--        android:text="okokokokokok"-->
+<!--        tools:text="positive" />-->
+</com.zyyoona7.cozydfrag.alert.view.button.CupertinoButtonsLayout>

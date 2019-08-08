@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="CozyAlertDialogFragment">
+    <declare-styleable name="CozyAlertDialog">
         <attr name="cozy_alert_style" format="enum">
             <enum name="material" value="0"/>
             <enum name="cupertino" value="1"/>
         </attr>
-        <attr name="cozy_alert_button_orientation" format="enum">
+        <attr name="cozy_alert_backgroundColor" format="color"/>
+        <attr name="cozy_alert_cornerRadius" format="dimension"/>
+        <attr name="cozy_alert_btn_orientation" format="enum">
             <enum name="horizontal" value="0"/>
             <enum name="vertical" value="1"/>
         </attr>
-        <attr name="cozy_alert_button_direction" format="enum">
-            <enum name="Ltr" value="0"/>
-            <enum name="Rtl" value="1"/>
-        </attr>
+        <attr name="cozy_alert_btn_height" format="dimension"/>
+        <attr name="cozy_alert_btn_neg_textAppearance" format="reference"/>
+        <attr name="cozy_alert_btn_pos_textAppearance" format="reference"/>
+        <attr name="cozy_alert_btn_neu_textAppearance" format="reference"/>
+        <attr name="cozy_alert_btn_selected_color" format="color"/>
     </declare-styleable>
 </resources>

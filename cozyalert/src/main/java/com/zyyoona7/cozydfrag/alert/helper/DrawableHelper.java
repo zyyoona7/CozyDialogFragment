@@ -24,7 +24,7 @@ public class DrawableHelper {
                                                 int pressedColor, float corners) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             return new RippleDrawable(ColorStateList.valueOf(pressedColor),
-                    null, createRoundDrawable(Color.WHITE, corners));
+                    null, createRoundDrawable(pressedColor, corners));
         } else {
             return createRoundSelector(normalColor, pressedColor, corners);
         }
@@ -48,21 +48,23 @@ public class DrawableHelper {
     }
 
     public static Drawable createRoundDrawable(int color, float radius) {
-        float[] outerRadii = new float[]{radius, radius, radius,
+        float[] outerRadii = radius<=0?null:new float[]{radius, radius, radius,
                 radius, radius, radius, radius, radius};
         return createRoundDrawable(color, outerRadii);
     }
 
     public static Drawable createRoundDrawable(int color, float bottomLeftRadius, float bottomRightRadius) {
-        float[] radii = new float[]{0f, 0f, 0f, 0f,
-                bottomRightRadius, bottomRightRadius, bottomLeftRadius, bottomLeftRadius};
+        float[] radii;
+        if (bottomLeftRadius <= 0 && bottomRightRadius <= 0) {
+            radii = null;
+        } else {
+            radii = new float[]{0f, 0f, 0f, 0f,
+                    bottomRightRadius, bottomRightRadius, bottomLeftRadius, bottomLeftRadius};
+        }
         return createRoundDrawable(color, radii);
     }
 
     public static Drawable createRoundDrawable(int color, float[] radii) {
-        if (radii == null || radii.length < 8) {
-            radii = new float[8];
-        }
         RoundRectShape r = new RoundRectShape(radii, null, null);
         ShapeDrawable shapeDrawable = new ShapeDrawable(r);
         shapeDrawable.getPaint().setColor(color);
