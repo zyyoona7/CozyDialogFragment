@@ -196,12 +196,12 @@ public class CozyAlertDialog extends CozyDialogFragment {
         view.setBackground(DrawableHelper
                 .createRoundDrawable(mBackgroundColor, mCornerRadius));
         mButtonsLayout = view.findViewById(R.id.buttons_layout);
-        resolveButtonStyle(mButtonsLayout);
-        resolveButtonListener(mButtonsLayout);
-        resolveButtonText(mButtonsLayout);
+        applyButtonStyle(mButtonsLayout);
+        addButtonListener(mButtonsLayout);
+        applyButtonText(mButtonsLayout);
     }
 
-    private void resolveButtonStyle(@NonNull ButtonsLayout buttonsLayout) {
+    private void applyButtonStyle(@NonNull ButtonsLayout buttonsLayout) {
         buttonsLayout.setOrientation(mButtonOrientation);
         buttonsLayout.setButtonsHeight(mButtonHeight);
         buttonsLayout.setNeutralTextAppearance(mNeutralTextAppearance);
@@ -210,7 +210,7 @@ public class CozyAlertDialog extends CozyDialogFragment {
         buttonsLayout.setSelectedColor(mButtonSelectedColor,mCornerRadius);
     }
 
-    private void resolveButtonListener(@NonNull ButtonsLayout buttonsLayout) {
+    private void addButtonListener(@NonNull ButtonsLayout buttonsLayout) {
         buttonsLayout.setNeutralOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -246,7 +246,7 @@ public class CozyAlertDialog extends CozyDialogFragment {
         });
     }
 
-    private void resolveButtonText(@NonNull ButtonsLayout buttonsLayout) {
+    private void applyButtonText(@NonNull ButtonsLayout buttonsLayout) {
         buttonsLayout.setNeutralText(mNeutralText, mNeutralTextRes);
         buttonsLayout.setNegativeText(mNegativeText, mNegativeTextRes);
         buttonsLayout.setPositiveText(mPositiveText, mPositiveTextRes);
