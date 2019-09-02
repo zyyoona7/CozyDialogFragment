@@ -7,6 +7,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -69,4 +70,9 @@ public class AnimDialogFragment extends BaseAnimatorDialogFragment {
                 .ofPropertyValuesHolder(targetView, holder1, holder2, holder3);
     }
 
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+        Toast.makeText(mActivity,"onDismiss",Toast.LENGTH_SHORT).show();
+    }
 }
