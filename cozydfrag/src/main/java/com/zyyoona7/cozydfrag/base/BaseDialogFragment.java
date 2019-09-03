@@ -124,7 +124,7 @@ public class BaseDialogFragment extends ExternalDialogFragment {
             mStatusBarLightMode = savedInstanceState.getBoolean(SAVED_STATUS_BAR_LIGHT_MODE, false);
         }
         //设置Style 透明背景，No Title
-        setStyle(AppCompatDialogFragment.STYLE_NO_TITLE,
+        setStyle(AppCompatDialogFragment.STYLE_NORMAL,
                 mFullscreen ? R.style.NoFloatingDialogFragment : R.style.FloatingDialogFragment);
     }
 
