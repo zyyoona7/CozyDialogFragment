@@ -69,10 +69,4 @@ public class AnimDialogFragment extends BaseAnimatorDialogFragment {
         return ObjectAnimator
                 .ofPropertyValuesHolder(targetView, holder1, holder2, holder3);
     }
-
-    @Override
-    public void onDismiss(DialogInterface dialog) {
-        super.onDismiss(dialog);
-        Toast.makeText(mActivity,"onDismiss",Toast.LENGTH_SHORT).show();
-    }
 }

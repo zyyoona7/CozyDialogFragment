@@ -1,6 +1,7 @@
 package com.zyyoona7.cozydfrag.base;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.TypedValue;
@@ -20,6 +21,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.zyyoona7.cozydfrag.R;
 import com.zyyoona7.cozydfrag.callback.OnDialogClickListener;
+import com.zyyoona7.cozydfrag.callback.OnDialogDismissListener;
 import com.zyyoona7.cozydfrag.callback.OnDialogMultiChoiceClickListener;
 import com.zyyoona7.cozydfrag.helper.CozyHelper;
 
@@ -207,15 +209,12 @@ public class BaseDialogFragment extends ExternalDialogFragment {
         }
     }
 
-    /**
-     * whether window set flag
-     *
-     * @param window Window
-     * @param flag   flag
-     * @return whether window set flag
-     */
-    protected boolean hasFlag(Window window, int flag) {
-        return window != null && (window.getAttributes().flags & flag) == flag;
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+        for (OnDialogDismissListener dialogDismissListener : getDialogDismissListeners()) {
+            dialogDismissListener.onDismiss(this, getRequestId());
+        }
     }
 
     /**
@@ -624,6 +623,13 @@ public class BaseDialogFragment extends ExternalDialogFragment {
      */
     public void setAnimationStyle(@StyleRes int animationStyle) {
         mAnimationStyle = animationStyle;
+    }
+
+    /**
+     * @return OnDialogDismissListener list from targetFragment,parentFragment,getActivity
+     */
+    protected List<OnDialogDismissListener> getDialogDismissListeners() {
+        return getDialogListeners(OnDialogDismissListener.class);
     }
 
     /**
