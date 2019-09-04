@@ -8,6 +8,11 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.zyyoona7.cozydfrag.callback.OnDialogDismissAnimListener;
+import com.zyyoona7.cozydfrag.callback.OnDialogShowAnimListener;
+
+import java.util.List;
+
 /**
  * custom show/dismiss animation by Animator
  *
@@ -141,7 +146,9 @@ public abstract class BaseAnimatorDialogFragment extends BaseAnimDialogFragment 
      * @param targetView Window content view
      */
     protected void onShowAnimationStart(@NonNull View targetView) {
-
+        for (OnDialogShowAnimListener dialogShowAnimListener : getDialogShowAnimListeners()) {
+            dialogShowAnimListener.onShowAnimStart(getRequestId());
+        }
     }
 
     /**
@@ -150,7 +157,9 @@ public abstract class BaseAnimatorDialogFragment extends BaseAnimDialogFragment 
      * @param targetView Window content view
      */
     protected void onShowAnimationEnd(@NonNull View targetView) {
-
+        for (OnDialogShowAnimListener dialogShowAnimListener : getDialogShowAnimListeners()) {
+            dialogShowAnimListener.onShowAnimEnd(getRequestId());
+        }
     }
 
     /**
@@ -168,7 +177,9 @@ public abstract class BaseAnimatorDialogFragment extends BaseAnimDialogFragment 
      * @param targetView Window content view
      */
     protected void onDismissAnimationStart(@NonNull View targetView) {
-
+        for (OnDialogDismissAnimListener dialogDismissAnimListener : getDialogDismissAnimListeners()) {
+            dialogDismissAnimListener.onDismissAnimStart(getRequestId());
+        }
     }
 
     /**
@@ -177,6 +188,25 @@ public abstract class BaseAnimatorDialogFragment extends BaseAnimDialogFragment 
      * @param targetView Window content view
      */
     protected void onDismissAnimationEnd(@NonNull View targetView) {
-
+        for (OnDialogDismissAnimListener dialogDismissAnimListener : getDialogDismissAnimListeners()) {
+            dialogDismissAnimListener.onDismissAnimEnd(getRequestId());
+        }
     }
+
+    /**
+     * @return OnDialogShowAnimListener list from targetFragment,parentFragment,getActivity
+     */
+    @NonNull
+    private List<OnDialogShowAnimListener> getDialogShowAnimListeners() {
+        return getDialogListeners(OnDialogShowAnimListener.class);
+    }
+
+    /**
+     * @return OnDialogDismissAnimListener list from targetFragment,parentFragment,getActivity
+     */
+    @NonNull
+    private List<OnDialogDismissAnimListener> getDialogDismissAnimListeners() {
+        return getDialogListeners(OnDialogDismissAnimListener.class);
+    }
+
 }

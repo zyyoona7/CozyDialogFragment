@@ -5,10 +5,12 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.view.View;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.zyyoona7.cozydfrag.base.BaseDialogFragment;
 import com.zyyoona7.cozydfrag.callback.OnDialogClickListener;
 import com.zyyoona7.cozydfrag.callback.OnDialogDismissListener;
+import com.zyyoona7.cozydfrag.callback.OnDialogShowAnimListener;
 import com.zyyoona7.cozydfrag.helper.AnimatorHelper;
 import com.zyyoona7.demo.AnimDialogFragment;
 import com.zyyoona7.demo.CozyAnimDialogFragment;
@@ -18,7 +20,7 @@ import com.zyyoona7.demo.R;
 import com.zyyoona7.demo.databinding.ActivityMainBinding;
 
 public class MainActivity extends BaseActivity<ActivityMainBinding>
-        implements OnDialogClickListener, OnDialogDismissListener {
+        implements OnDialogClickListener, OnDialogDismissListener, OnDialogShowAnimListener {
 
     @Override
     protected int getLayoutResId() {
@@ -150,5 +152,15 @@ public class MainActivity extends BaseActivity<ActivityMainBinding>
         if (requestId == 0) {
             ToastUtils.showShort("AnimDialog dismiss");
         }
+    }
+
+    @Override
+    public void onShowAnimStart(int requestId) {
+        LogUtils.d("reuqestId=" + requestId + ",dialog show anim start");
+    }
+
+    @Override
+    public void onShowAnimEnd(int requestId) {
+        LogUtils.d("reuqestId=" + requestId + ",dialog show anim end");
     }
 }

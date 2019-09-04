@@ -628,6 +628,7 @@ public class BaseDialogFragment extends ExternalDialogFragment {
     /**
      * @return OnDialogDismissListener list from targetFragment,parentFragment,getActivity
      */
+    @NonNull
     protected List<OnDialogDismissListener> getDialogDismissListeners() {
         return getDialogListeners(OnDialogDismissListener.class);
     }
@@ -635,6 +636,7 @@ public class BaseDialogFragment extends ExternalDialogFragment {
     /**
      * @return OnDialogClickListener list from targetFragment,parentFragment,getActivity
      */
+    @NonNull
     protected List<OnDialogClickListener> getDialogClickListeners() {
         return getDialogListeners(OnDialogClickListener.class);
     }
@@ -649,6 +651,7 @@ public class BaseDialogFragment extends ExternalDialogFragment {
     /**
      * @return OnDialogMultiChoiceClickListener list from targetFragment,parentFragment,getActivity
      */
+    @NonNull
     protected List<OnDialogMultiChoiceClickListener> getDialogMultiChoiceClickListeners() {
         return getDialogListeners(OnDialogMultiChoiceClickListener.class);
     }

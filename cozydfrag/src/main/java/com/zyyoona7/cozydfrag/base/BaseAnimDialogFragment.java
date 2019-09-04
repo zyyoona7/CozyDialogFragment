@@ -24,6 +24,9 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import com.zyyoona7.cozydfrag.callback.OnAnimInterceptCallback;
+import com.zyyoona7.cozydfrag.callback.OnDialogDimAnimListener;
+import com.zyyoona7.cozydfrag.callback.OnDialogDismissAnimListener;
+import com.zyyoona7.cozydfrag.callback.OnDialogShowAnimListener;
 import com.zyyoona7.cozydfrag.dialog.AnimDialog;
 import com.zyyoona7.cozydfrag.dialog.IAnimDialog;
 
@@ -454,7 +457,9 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
      * @param isDismiss   whether dismiss dialog
      */
     protected void onDimAnimationStart(Drawable dimDrawable, boolean isDismiss) {
-
+        for (OnDialogDimAnimListener dialogDimAnimListener : getDialogDimAnimListeners()) {
+            dialogDimAnimListener.onDimAnimStart(isDismiss,getRequestId());
+        }
     }
 
     /**
@@ -464,7 +469,9 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
      * @param isDismiss   whether dismiss dialog
      */
     protected void onDimAnimationEnd(Drawable dimDrawable, boolean isDismiss) {
-
+        for (OnDialogDimAnimListener dialogDimAnimListener : getDialogDimAnimListeners()) {
+            dialogDimAnimListener.onDimAnimEnd(isDismiss,getRequestId());
+        }
     }
 
     /**
@@ -626,5 +633,13 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
      */
     public void setStatusFontFollowDefault(boolean statusFontFollowDefault) {
         mStatusFontFollowDefault = statusFontFollowDefault;
+    }
+
+    /**
+     * @return OnDialogDimAnimListener list from targetFragment,parentFragment,getActivity
+     */
+    @NonNull
+    private List<OnDialogDimAnimListener> getDialogDimAnimListeners() {
+        return getDialogListeners(OnDialogDimAnimListener.class);
     }
 }
