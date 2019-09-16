@@ -1,11 +1,6 @@
 package com.zyyoona7.cozydfrag.helper;
 
-import android.graphics.Color;
-import android.os.Build;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -52,10 +47,21 @@ public class CozyHelper {
      * @param <T>     extends DialogFragment
      * @return DialogFragment
      */
+    @SuppressWarnings("unchecked")
     @Nullable
-    public static <T extends DialogFragment> DialogFragment findDialogFragment(FragmentManager manager,
-                                                                               Class<T> dialog) {
-        return findDialogFragment(manager, dialog.getName());
+    public static <T extends DialogFragment> T findDialogFragment(FragmentManager manager,
+                                                                  Class<T> dialog) {
+        return (T) findDialogFragment(manager, dialog.getName());
+    }
+
+    @Nullable
+    public static <T extends BaseDialogFragment> T findDialogFragment(FragmentManager manager,
+                                                                      Class<T> dialog, int requestId) {
+        T df = findDialogFragment(manager, dialog);
+        if (df != null && df.getRequestId() == requestId) {
+            return df;
+        }
+        return null;
     }
 
     /**
@@ -177,57 +183,34 @@ public class CozyHelper {
     }
 
     /**
-     * Sets Window status bar light mode
+     * execute runnable when dialog dismiss
      *
-     * @param window               Window
-     * @param isStatusBarLightMode Whether status bar font dark
+     * @param manager  FragmentManager
+     * @param dialog   class extends BaseDialogFragment
+     * @param runnable runnable
+     * @param <T>      extends BaseDialogFragment
      */
-    public static void setStatusBarLightMode(Window window, boolean isStatusBarLightMode) {
-        if (window != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            View decorView = window.getDecorView();
-            int flags = decorView.getSystemUiVisibility();
-            if (isStatusBarLightMode) {
-                flags |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
-            } else {
-                flags &= ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
-            }
-            decorView.setSystemUiVisibility(flags);
-        }
+    public static <T extends BaseDialogFragment> void postOnDismiss(FragmentManager manager,
+                                                                    Class<T> dialog,
+                                                                    @NonNull Runnable runnable) {
+        postOnDismiss(manager, dialog, -1, runnable);
     }
 
     /**
-     * Sets Window status bar transparent
+     * execute runnable when dialog dismiss
      *
-     * @param window Window
+     * @param manager   FragmentManager
+     * @param dialog    class extends BaseDialogFragment
+     * @param requestId requestId
+     * @param runnable  runnable
+     * @param <T>       extends BaseDialogFragment
      */
-    public static void setTransparentStatusBar(Window window) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT || window == null) {
-            return;
+    public static <T extends BaseDialogFragment> void postOnDismiss(FragmentManager manager,
+                                                                    Class<T> dialog, int requestId,
+                                                                    @NonNull Runnable runnable) {
+        T df = findDialogFragment(manager, dialog, requestId);
+        if (df != null) {
+            df.postOnDismiss(runnable);
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            View decor = window.getDecorView();
-            int option = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                int flags = window.getDecorView().getSystemUiVisibility()
-                        & View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
-                decor.setSystemUiVisibility(option | flags);
-            } else {
-                decor.setSystemUiVisibility(option);
-            }
-            window.setStatusBarColor(Color.TRANSPARENT);
-        } else {
-            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        }
-    }
-
-    public static void fitNotch(Window window) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
-            return;
-        }
-        WindowManager.LayoutParams attributes = window.getAttributes();
-        attributes.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
-        window.setAttributes(attributes);
     }
 }

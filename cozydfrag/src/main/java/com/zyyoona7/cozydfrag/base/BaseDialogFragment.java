@@ -23,7 +23,7 @@ import com.zyyoona7.cozydfrag.R;
 import com.zyyoona7.cozydfrag.callback.OnDialogClickListener;
 import com.zyyoona7.cozydfrag.callback.OnDialogDismissListener;
 import com.zyyoona7.cozydfrag.callback.OnDialogMultiChoiceClickListener;
-import com.zyyoona7.cozydfrag.helper.CozyHelper;
+import com.zyyoona7.cozydfrag.helper.CozyBarHelper;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -85,6 +85,8 @@ public class BaseDialogFragment extends ExternalDialogFragment {
 
     //DialogFragment id
     private int mRequestId = -1;
+    //runnable list execute on animation end
+    private List<Runnable> mDismissActions;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -189,14 +191,14 @@ public class BaseDialogFragment extends ExternalDialogFragment {
             if (mHideStatusBar) {
                 window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
             } else {
-                CozyHelper.setTransparentStatusBar(window);
+                CozyBarHelper.setTransparentStatusBar(window);
                 if (mStatusBarLightMode) {
                     //设置状态栏字体颜色只对全屏有效，如果不是Match_parent即使设置了也不起作用
-                    CozyHelper.setStatusBarLightMode(window, true);
+                    CozyBarHelper.setStatusBarLightMode(window, true);
                 }
             }
             //全屏时适配刘海屏
-            CozyHelper.fitNotch(window);
+            CozyBarHelper.fitNotch(window);
         }
         if (mAnimationStyle != 0) {
             window.setWindowAnimations(mAnimationStyle);
@@ -210,11 +212,40 @@ public class BaseDialogFragment extends ExternalDialogFragment {
     }
 
     @Override
-    public void onDismiss(DialogInterface dialog) {
+    public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
+        executeActionsOnDismiss();
         for (OnDialogDismissListener dialogDismissListener : getDialogDismissListeners()) {
             dialogDismissListener.onDismiss(this, getRequestId());
         }
+    }
+
+    /**
+     * execute runnable when dialog dismiss
+     */
+    private void executeActionsOnDismiss() {
+        //execute dismiss actions if not empty
+        if (mDismissActions != null) {
+            for (int i = 0; i < mDismissActions.size(); i++) {
+                Runnable runnable = mDismissActions.get(i);
+                if (runnable != null) {
+                    runnable.run();
+                }
+            }
+            mDismissActions.clear();
+        }
+    }
+
+    /**
+     * add action, they will execute when dismiss animation end.
+     *
+     * @param runnable runnable
+     */
+    public void postOnDismiss(@NonNull Runnable runnable) {
+        if (mDismissActions == null) {
+            mDismissActions = new ArrayList<>(1);
+        }
+        mDismissActions.add(runnable);
     }
 
     /**

@@ -73,7 +73,7 @@ public class ExternalDialogFragment extends DialogFragment {
             return;
         }
         if (isAdded()) {
-            dismissInternal(true);
+            dismissInternal(true, false);
         }
         try {
             super.show(manager, tag);
@@ -107,7 +107,7 @@ public class ExternalDialogFragment extends DialogFragment {
             return mBackStackId;
         }
         if (isAdded()) {
-            dismissInternal(true);
+            dismissInternal(true, false);
         }
         try {
             return super.show(transaction, tag);
@@ -141,7 +141,7 @@ public class ExternalDialogFragment extends DialogFragment {
             return mBackStackId;
         }
         if (isAdded()) {
-            dismissInternal(true);
+            dismissInternal(true, false);
         }
         mDismissed = false;
         mShownByMe = true;
@@ -176,7 +176,7 @@ public class ExternalDialogFragment extends DialogFragment {
             return;
         }
         if (isAdded()) {
-            dismissInternal(true);
+            dismissInternal(true, false);
         }
         mDismissed = false;
         mShownByMe = true;
@@ -213,8 +213,8 @@ public class ExternalDialogFragment extends DialogFragment {
     }
 
     @Override
-    protected void dismissInternal(boolean allowStateLoss) {
-        super.dismissInternal(allowStateLoss);
+    protected void dismissInternal(boolean allowStateLoss, boolean fromOnDismiss) {
+        super.dismissInternal(allowStateLoss, fromOnDismiss);
     }
 
     /**

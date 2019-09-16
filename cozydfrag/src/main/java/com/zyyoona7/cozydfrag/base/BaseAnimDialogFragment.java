@@ -71,8 +71,6 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
     //status bar font mode light or dark,if default status bar font will white
     private boolean mStatusFontFollowDefault = true;
 
-    //runnable list execute on animation end
-    private List<Runnable> mDismissActions;
     //whether called dismiss
     private boolean mDismissed;
 
@@ -201,15 +199,14 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
         dismissWithAnimation(false);
     }
 
-
     @Override
-    protected void dismissInternal(boolean allowStateLoss) {
+    protected void dismissInternal(boolean allowStateLoss, boolean fromOnDismiss) {
         //AlertDialog internal will dismiss dialog when click buttons.
         //we need intercept it.
         if (getDialog() instanceof IAnimDialog) {
             ((IAnimDialog) getDialog()).setDismissByDf(true);
         }
-        super.dismissInternal(allowStateLoss);
+        super.dismissInternal(allowStateLoss, fromOnDismiss);
         if (getDialog() instanceof IAnimDialog) {
             ((IAnimDialog) getDialog()).setDismissByDf(false);
         }
@@ -268,31 +265,7 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
             mDimAnimator.cancel();
         }
         safeRemoveDim();
-        //execute dismiss actions if not empty
-        if (mDismissActions != null) {
-            for (int i = 0; i < mDismissActions.size(); i++) {
-                Runnable runnable = mDismissActions.get(i);
-                if (runnable != null) {
-                    runnable.run();
-                }
-            }
-            mDismissActions.clear();
-        }
-    }
 
-    /**
-     * add action, they will execute when dismiss animation end.
-     *
-     * @param runnable runnable
-     */
-    protected void addAction(Runnable runnable) {
-        if (mDismissActions == null) {
-            mDismissActions = new ArrayList<>(1);
-        }
-        if (runnable == null) {
-            return;
-        }
-        mDismissActions.add(runnable);
     }
 
     private void safeRemoveDim() {

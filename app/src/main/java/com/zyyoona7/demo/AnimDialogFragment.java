@@ -7,7 +7,6 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -36,7 +35,7 @@ public class AnimDialogFragment extends BaseAnimatorDialogFragment {
                 if (listener == null) {
                     return;
                 }
-                addAction(new Runnable() {
+                postOnDismiss(new Runnable() {
                     @Override
                     public void run() {
                         OnDialogClickListener clickListener = getDialogClickListener();

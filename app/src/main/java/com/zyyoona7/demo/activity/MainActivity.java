@@ -3,6 +3,7 @@ package com.zyyoona7.demo.activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Handler;
 import android.view.View;
 
 import com.blankj.utilcode.util.LogUtils;
@@ -95,26 +96,26 @@ public class MainActivity extends BaseActivity<ActivityMainBinding>
     private DemoDialogFragment mDemoDialogFragment;
 
     private void showDemoDialogFragment() {
-        if (mDemoDialogFragment == null) {
-            mDemoDialogFragment = DemoDialogFragment.newInstance();
-            mDemoDialogFragment.setMatchWidth();
-            mDemoDialogFragment.setHeight(300f);
-            mDemoDialogFragment.setBottomGravity();
-        }
+//        if (mDemoDialogFragment == null) {
+//            mDemoDialogFragment = DemoDialogFragment.newInstance();
+//            mDemoDialogFragment.setMatchWidth();
+//            mDemoDialogFragment.setHeight(300f);
+//            mDemoDialogFragment.setBottomGravity();
+//        }
+//
+//        mDemoDialogFragment.showAllowingStateLoss(getSupportFragmentManager());
 
-        mDemoDialogFragment.showAllowingStateLoss(getSupportFragmentManager());
 
-
-//        DemoDialogFragment demoDialogFragment = DemoDialogFragment.newInstance();
+        DemoDialogFragment demoDialogFragment = DemoDialogFragment.newInstance();
 //        demoDialogFragment.setMatchWidth();
 //        demoDialogFragment.setHeight(300f);
-////        demoDialogFragment.setMatchHeight();
-//        demoDialogFragment.setBottomGravity();
-//        demoDialogFragment.setFullscreen(true,false,true);
-//        demoDialogFragment.setStatusFontFollowDefault(false);
-////        demoDialogFragment.setPaddingHorizontal(20f, 20f);
-////        demoDialogFragment.setPaddingVertical(20f, 20f);
-//        demoDialogFragment.showAllowingStateLoss(getSupportFragmentManager());
+//        demoDialogFragment.setMatchHeight();
+        demoDialogFragment.setBottomGravity();
+        demoDialogFragment.setFullscreen(true,false,true);
+        demoDialogFragment.setStatusFontFollowDefault(false);
+//        demoDialogFragment.setPaddingHorizontal(20f, 20f);
+//        demoDialogFragment.setPaddingVertical(20f, 20f);
+        demoDialogFragment.showAllowingStateLoss(getSupportFragmentManager());
     }
 
     private void showNormalDialogFragment() {
