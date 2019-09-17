@@ -10,7 +10,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,10 +22,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
+import com.zyyoona7.cozydfrag.callback.DismissAction;
 import com.zyyoona7.cozydfrag.callback.OnAnimInterceptCallback;
 import com.zyyoona7.cozydfrag.callback.OnDialogDimAnimListener;
-import com.zyyoona7.cozydfrag.callback.OnDialogDismissAnimListener;
-import com.zyyoona7.cozydfrag.callback.OnDialogShowAnimListener;
 import com.zyyoona7.cozydfrag.dialog.AnimDialog;
 import com.zyyoona7.cozydfrag.dialog.IAnimDialog;
 
@@ -51,6 +49,7 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
     private static final String SAVED_USE_DISMISS_ANIMATION = "SAVED_USE_DISMISS_ANIMATION";
     private static final String SAVED_USE_DIM_ANIMATION = "SAVED_USE_DIM_ANIMATION";
     private static final String SAVED_STATUS_FOLLOW_DIALOG_DEFAULT = "SAVED_STATUS_FOLLOW_DIALOG_DEFAULT";
+    private static final String SAVED_DISMISS_TYPE = "SAVED_DISMISS_TYPE";
 
     private static final int DEFAULT_DURATION = 300;
     private static final int ALPHA_MAX = 255;
@@ -73,6 +72,9 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
 
     //whether called dismiss
     private boolean mDismissed;
+    //custom property,用来区分是哪种操作的 Dismiss
+    private int mDismissType = DismissAction.TYPE_DEFAULT;
+    private ArrayList<DismissAction> mDismissActionList;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -87,6 +89,7 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
             mUseDismissAnimation = savedInstanceState.getBoolean(SAVED_USE_DISMISS_ANIMATION, true);
             mUseDimAnimation = savedInstanceState.getBoolean(SAVED_USE_DIM_ANIMATION, true);
             mStatusFontFollowDefault = savedInstanceState.getBoolean(SAVED_STATUS_FOLLOW_DIALOG_DEFAULT, true);
+            mDismissType = savedInstanceState.getInt(SAVED_DISMISS_TYPE, DismissAction.TYPE_DEFAULT);
         }
     }
 
@@ -101,6 +104,7 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
         outState.putBoolean(SAVED_USE_DISMISS_ANIMATION, mUseDismissAnimation);
         outState.putBoolean(SAVED_USE_DIM_ANIMATION, mUseDimAnimation);
         outState.putBoolean(SAVED_STATUS_FOLLOW_DIALOG_DEFAULT, mStatusFontFollowDefault);
+        outState.putInt(SAVED_DISMISS_TYPE,mDismissType);
         super.onSaveInstanceState(outState);
     }
 
@@ -119,7 +123,6 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
                 || getDialog().getWindow() == null || getAnimationStyle() != 0) {
             return;
         }
-        Log.d("BaseAnimDialogFragment", "onActivityCreated: ");
         getDialog().setOnShowListener(this);
         if (getDialog() instanceof IAnimDialog) {
             ((IAnimDialog) getDialog()).setOnAnimInterceptCallback(this);
@@ -176,11 +179,13 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
 
     @Override
     public void onTouchOutside(MotionEvent event) {
+        mDismissType = DismissAction.TYPE_TOUCH_OUTSIDE;
         dismissAllowingStateLoss();
     }
 
     @Override
     public void onBackPress() {
+        mDismissType = DismissAction.TYPE_BACK_PRESS;
         dismissAllowingStateLoss();
     }
 
@@ -210,6 +215,33 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
         if (getDialog() instanceof IAnimDialog) {
             ((IAnimDialog) getDialog()).setDismissByDf(false);
         }
+    }
+
+    @Override
+    public void onDismiss(@NonNull DialogInterface dialog) {
+        super.onDismiss(dialog);
+        //execute dismiss actions if not empty
+        if (mDismissActionList != null) {
+            for (int i = 0; i < mDismissActionList.size(); i++) {
+                DismissAction action = mDismissActionList.get(i);
+                if (action != null) {
+                    action.run(this, mDismissType);
+                }
+            }
+            mDismissActionList.clear();
+        }
+    }
+
+    /**
+     * add action, they will execute when dialog dismiss.
+     *
+     * @param action runnable
+     */
+    public void postOnDismiss(@NonNull DismissAction action) {
+        if (mDismissActionList == null) {
+            mDismissActionList = new ArrayList<>(1);
+        }
+        mDismissActionList.add(action);
     }
 
     /**
@@ -431,7 +463,7 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
      */
     protected void onDimAnimationStart(Drawable dimDrawable, boolean isDismiss) {
         for (OnDialogDimAnimListener dialogDimAnimListener : getDialogDimAnimListeners()) {
-            dialogDimAnimListener.onDimAnimStart(isDismiss,getRequestId());
+            dialogDimAnimListener.onDimAnimStart(isDismiss, getRequestId());
         }
     }
 
@@ -443,7 +475,7 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
      */
     protected void onDimAnimationEnd(Drawable dimDrawable, boolean isDismiss) {
         for (OnDialogDimAnimListener dialogDimAnimListener : getDialogDimAnimListeners()) {
-            dialogDimAnimListener.onDimAnimEnd(isDismiss,getRequestId());
+            dialogDimAnimListener.onDimAnimEnd(isDismiss, getRequestId());
         }
     }
 
@@ -614,5 +646,22 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
     @NonNull
     private List<OnDialogDimAnimListener> getDialogDimAnimListeners() {
         return getDialogListeners(OnDialogDimAnimListener.class);
+    }
+
+    /**
+     * @return dialog dismissed type in {@link DismissAction#TYPE_DEFAULT} ,
+     * {@link DismissAction#TYPE_BACK_PRESS},{@link DismissAction#TYPE_TOUCH_OUTSIDE} or custom
+     */
+    public int getDismissType() {
+        return mDismissType;
+    }
+
+    /**
+     * Sets Dialog dismissed type in {@link DismissAction} types or custom
+     *
+     * @param dismissType dismissed type
+     */
+    public void setDismissType(int dismissType) {
+        mDismissType = dismissType;
     }
 }

@@ -86,7 +86,7 @@ public class BaseDialogFragment extends ExternalDialogFragment {
     //DialogFragment id
     private int mRequestId = -1;
     //runnable list execute on animation end
-    private List<Runnable> mDismissActions;
+    private ArrayList<Runnable> mDismissActions;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -237,7 +237,7 @@ public class BaseDialogFragment extends ExternalDialogFragment {
     }
 
     /**
-     * add action, they will execute when dismiss animation end.
+     * add action, they will execute when dialog dismiss.
      *
      * @param runnable runnable
      */

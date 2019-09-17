@@ -9,6 +9,7 @@ import android.view.View;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.zyyoona7.cozydfrag.base.BaseDialogFragment;
+import com.zyyoona7.cozydfrag.callback.DismissAction;
 import com.zyyoona7.cozydfrag.callback.OnDialogClickListener;
 import com.zyyoona7.cozydfrag.callback.OnDialogDismissListener;
 import com.zyyoona7.cozydfrag.callback.OnDialogShowAnimListener;
@@ -91,6 +92,12 @@ public class MainActivity extends BaseActivity<ActivityMainBinding>
         dialogFragment.setDimColor(Color.RED);
 //        dialogFragment.setAnimationStyle(R.style.DialogScaleAnim);
         dialogFragment.showAllowingStateLoss(getSupportFragmentManager());
+        dialogFragment.postOnDismiss(new DismissAction() {
+            @Override
+            public void run(BaseDialogFragment dialogFragment, int dismissType) {
+                ToastUtils.showShort("dismissType:"+dismissType);
+            }
+        });
     }
 
     private DemoDialogFragment mDemoDialogFragment;

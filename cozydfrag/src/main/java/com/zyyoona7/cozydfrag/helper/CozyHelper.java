@@ -6,7 +6,9 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.zyyoona7.cozydfrag.base.BaseAnimDialogFragment;
 import com.zyyoona7.cozydfrag.base.BaseDialogFragment;
+import com.zyyoona7.cozydfrag.callback.DismissAction;
 
 /**
  * Utils for DialogFragment dismiss
@@ -211,6 +213,38 @@ public class CozyHelper {
         T df = findDialogFragment(manager, dialog, requestId);
         if (df != null) {
             df.postOnDismiss(runnable);
+        }
+    }
+
+    /**
+     * execute runnable when dialog dismiss
+     *
+     * @param manager FragmentManager
+     * @param dialog  class extends BaseDialogFragment
+     * @param action  dismiss action
+     * @param <T>     extends BaseDialogFragment
+     */
+    public static <T extends BaseAnimDialogFragment> void postOnDismiss(FragmentManager manager,
+                                                                        Class<T> dialog,
+                                                                        @NonNull DismissAction action) {
+        postOnDismiss(manager, dialog, -1, action);
+    }
+
+    /**
+     * execute runnable when dialog dismiss
+     *
+     * @param manager   FragmentManager
+     * @param dialog    class extends BaseDialogFragment
+     * @param requestId requestId
+     * @param action    dismiss action
+     * @param <T>       extends BaseDialogFragment
+     */
+    public static <T extends BaseAnimDialogFragment> void postOnDismiss(FragmentManager manager,
+                                                                        Class<T> dialog, int requestId,
+                                                                        @NonNull DismissAction action) {
+        T df = findDialogFragment(manager, dialog, requestId);
+        if (df != null) {
+            df.postOnDismiss(action);
         }
     }
 }
