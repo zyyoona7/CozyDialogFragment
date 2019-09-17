@@ -235,9 +235,9 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
     /**
      * add action, they will execute when dialog dismiss.
      *
-     * @param action runnable
+     * @param action dismiss action
      */
-    public void postOnDismiss(@NonNull DismissAction action) {
+    public void executeOnDismiss(@NonNull DismissAction action) {
         if (mDismissActionList == null) {
             mDismissActionList = new ArrayList<>(1);
         }

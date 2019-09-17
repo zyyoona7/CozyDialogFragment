@@ -8,8 +8,8 @@ android {
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 29
-        versionCode 5
-        versionName "0.0.5"
+        versionCode 6
+        versionName "0.0.5.1"
         consumerProguardFiles 'consumer-rules.pro'
     }
 
@@ -31,7 +31,7 @@ publish {
     userOrg = 'zyyoona7'
     groupId = 'com.github.zyyoona7'
     artifactId = 'cozydfrag'
-    publishVersion = '0.0.5'
+    publishVersion = '0.0.5.1'
     desc = 'Easy to use API based on DialogFragment.'
     website = 'https://github.com/zyyoona7/CozyDialogFragment'
 }

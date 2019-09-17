@@ -192,10 +192,10 @@ public class CozyHelper {
      * @param runnable runnable
      * @param <T>      extends BaseDialogFragment
      */
-    public static <T extends BaseDialogFragment> void postOnDismiss(FragmentManager manager,
-                                                                    Class<T> dialog,
-                                                                    @NonNull Runnable runnable) {
-        postOnDismiss(manager, dialog, -1, runnable);
+    public static <T extends BaseDialogFragment> void runOnDismiss(FragmentManager manager,
+                                                                   Class<T> dialog,
+                                                                   @NonNull Runnable runnable) {
+        runOnDismiss(manager, dialog, -1, runnable);
     }
 
     /**
@@ -207,12 +207,12 @@ public class CozyHelper {
      * @param runnable  runnable
      * @param <T>       extends BaseDialogFragment
      */
-    public static <T extends BaseDialogFragment> void postOnDismiss(FragmentManager manager,
-                                                                    Class<T> dialog, int requestId,
-                                                                    @NonNull Runnable runnable) {
+    public static <T extends BaseDialogFragment> void runOnDismiss(FragmentManager manager,
+                                                                   Class<T> dialog, int requestId,
+                                                                   @NonNull Runnable runnable) {
         T df = findDialogFragment(manager, dialog, requestId);
         if (df != null) {
-            df.postOnDismiss(runnable);
+            df.runOnDismiss(runnable);
         }
     }
 
@@ -224,10 +224,10 @@ public class CozyHelper {
      * @param action  dismiss action
      * @param <T>     extends BaseDialogFragment
      */
-    public static <T extends BaseAnimDialogFragment> void postOnDismiss(FragmentManager manager,
-                                                                        Class<T> dialog,
-                                                                        @NonNull DismissAction action) {
-        postOnDismiss(manager, dialog, -1, action);
+    public static <T extends BaseAnimDialogFragment> void executeOnDismiss(FragmentManager manager,
+                                                                           Class<T> dialog,
+                                                                           @NonNull DismissAction action) {
+        executeOnDismiss(manager, dialog, -1, action);
     }
 
     /**
@@ -239,12 +239,12 @@ public class CozyHelper {
      * @param action    dismiss action
      * @param <T>       extends BaseDialogFragment
      */
-    public static <T extends BaseAnimDialogFragment> void postOnDismiss(FragmentManager manager,
-                                                                        Class<T> dialog, int requestId,
-                                                                        @NonNull DismissAction action) {
+    public static <T extends BaseAnimDialogFragment> void executeOnDismiss(FragmentManager manager,
+                                                                           Class<T> dialog, int requestId,
+                                                                           @NonNull DismissAction action) {
         T df = findDialogFragment(manager, dialog, requestId);
         if (df != null) {
-            df.postOnDismiss(action);
+            df.executeOnDismiss(action);
         }
     }
 }

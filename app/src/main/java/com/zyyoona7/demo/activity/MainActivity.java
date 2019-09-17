@@ -3,7 +3,6 @@ package com.zyyoona7.demo.activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Handler;
 import android.view.View;
 
 import com.blankj.utilcode.util.LogUtils;
@@ -92,7 +91,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding>
         dialogFragment.setDimColor(Color.RED);
 //        dialogFragment.setAnimationStyle(R.style.DialogScaleAnim);
         dialogFragment.showAllowingStateLoss(getSupportFragmentManager());
-        dialogFragment.postOnDismiss(new DismissAction() {
+        dialogFragment.executeOnDismiss(new DismissAction() {
             @Override
             public void run(BaseDialogFragment dialogFragment, int dismissType) {
                 ToastUtils.showShort("dismissType:"+dismissType);

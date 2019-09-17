@@ -241,7 +241,7 @@ public class BaseDialogFragment extends ExternalDialogFragment {
      *
      * @param runnable runnable
      */
-    public void postOnDismiss(@NonNull Runnable runnable) {
+    public void runOnDismiss(@NonNull Runnable runnable) {
         if (mDismissActions == null) {
             mDismissActions = new ArrayList<>(1);
         }

@@ -35,7 +35,7 @@ public class AnimDialogFragment extends BaseAnimatorDialogFragment {
                 if (listener == null) {
                     return;
                 }
-                postOnDismiss(new Runnable() {
+                runOnDismiss(new Runnable() {
                     @Override
                     public void run() {
                         OnDialogClickListener clickListener = getDialogClickListener();
