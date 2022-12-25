@@ -1,9 +1,13 @@
-package androidx.fragment.app;
+package com.zyyoona7.cozydfrag.base;
 
 import android.os.Bundle;
+import android.os.SystemClock;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 /**
  * DialogFragment 扩展，
@@ -65,7 +69,7 @@ public class ExternalDialogFragment extends DialogFragment {
      */
     @Override
     public void show(@NonNull FragmentManager manager, String tag) {
-        long current = System.currentTimeMillis();
+        long current = SystemClock.elapsedRealtime();
         if (current - mLashShowTime <= mAntiShakeDuration) {
             return;
         }
@@ -73,7 +77,7 @@ public class ExternalDialogFragment extends DialogFragment {
             return;
         }
         if (isAdded()) {
-            dismissInternal(true, false);
+            dismissAllowingStateLoss();
         }
         try {
             super.show(manager, tag);
@@ -81,75 +85,6 @@ public class ExternalDialogFragment extends DialogFragment {
             //catch java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
         }
         mLashShowTime = current;
-    }
-
-    /**
-     * 根据 FragmentTransaction 显示 DialogFragment
-     *
-     * @param transaction transaction
-     * @return BackStackId
-     */
-    public int show(@NonNull FragmentTransaction transaction) {
-        return show(transaction, getSimpleTag());
-    }
-
-    /**
-     * 根据 FragmentTransaction 显示 DialogFragment
-     *
-     * @param transaction transaction
-     * @param tag         tag
-     * @return BackStackId
-     */
-    @Override
-    public int show(@NonNull FragmentTransaction transaction, String tag) {
-        long current = System.currentTimeMillis();
-        if (current - mLashShowTime <= mAntiShakeDuration) {
-            return mBackStackId;
-        }
-        if (isAdded()) {
-            dismissInternal(true, false);
-        }
-        try {
-            return super.show(transaction, tag);
-        } catch (Exception e) {
-            //catch java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
-        }
-        mLashShowTime = current;
-        return mBackStackId;
-    }
-
-    /**
-     * 根据 FragmentTransaction 显示 DialogFragment 允许状态丢失
-     *
-     * @param transaction transaction
-     * @return BackStackId
-     */
-    public int showAllowingStateLoss(@NonNull FragmentTransaction transaction) {
-        return showAllowingStateLoss(transaction, getSimpleTag());
-    }
-
-    /**
-     * 根据 FragmentTransaction 显示 DialogFragment 允许状态丢失
-     *
-     * @param transaction transaction
-     * @param tag         tag
-     * @return BackStackId
-     */
-    public int showAllowingStateLoss(@NonNull FragmentTransaction transaction, @Nullable String tag) {
-        long current = System.currentTimeMillis();
-        if (current - mLashShowTime <= mAntiShakeDuration) {
-            return mBackStackId;
-        }
-        if (isAdded()) {
-            dismissInternal(true, false);
-        }
-        mDismissed = false;
-        mShownByMe = true;
-        transaction.add(this, tag);
-        mViewDestroyed = false;
-        mBackStackId = transaction.commitAllowingStateLoss();
-        mLashShowTime = current;
-        return mBackStackId;
     }
 
     /**
@@ -168,18 +103,16 @@ public class ExternalDialogFragment extends DialogFragment {
      * @param tag     Tag
      */
     public void showAllowingStateLoss(@NonNull FragmentManager manager, String tag) {
-        long current = System.currentTimeMillis();
+        long current = SystemClock.elapsedRealtime();
         if (current - mLashShowTime <= mAntiShakeDuration) {
             return;
         }
-        if (manager.isDestroyed() || manager.isStateSaved()) {
+        if (manager.isDestroyed()) {
             return;
         }
         if (isAdded()) {
-            dismissInternal(true, false);
+            dismissAllowingStateLoss();
         }
-        mDismissed = false;
-        mShownByMe = true;
         FragmentTransaction ft = manager.beginTransaction();
         ft.add(this, tag);
         ft.commitAllowingStateLoss();
@@ -210,11 +143,6 @@ public class ExternalDialogFragment extends DialogFragment {
             return;
         }
         super.dismissAllowingStateLoss();
-    }
-
-    @Override
-    protected void dismissInternal(boolean allowStateLoss, boolean fromOnDismiss) {
-        super.dismissInternal(allowStateLoss, fromOnDismiss);
     }
 
     /**

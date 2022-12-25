@@ -16,7 +16,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StyleRes;
 import androidx.appcompat.app.AppCompatDialogFragment;
-import androidx.fragment.app.ExternalDialogFragment;
 import androidx.fragment.app.FragmentActivity;
 
 import com.zyyoona7.cozydfrag.R;

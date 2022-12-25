@@ -205,19 +205,6 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
     }
 
     @Override
-    protected void dismissInternal(boolean allowStateLoss, boolean fromOnDismiss) {
-        //AlertDialog internal will dismiss dialog when click buttons.
-        //we need intercept it.
-        if (getDialog() instanceof IAnimDialog) {
-            ((IAnimDialog) getDialog()).setDismissByDf(true);
-        }
-        super.dismissInternal(allowStateLoss, fromOnDismiss);
-        if (getDialog() instanceof IAnimDialog) {
-            ((IAnimDialog) getDialog()).setDismissByDf(false);
-        }
-    }
-
-    @Override
     public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
         //execute dismiss actions if not empty
@@ -256,10 +243,18 @@ public abstract class BaseAnimDialogFragment extends BaseDialogFragment
         mDismissed = true;
         //use animationStyle will not use custom animation
         if (getAnimationStyle() != 0) {
+            //AlertDialog internal will dismiss dialog when click buttons.
+            //we need intercept it.
+            if (getDialog() instanceof IAnimDialog) {
+                ((IAnimDialog) getDialog()).setDismissByDf(true);
+            }
             if (stateLoss) {
                 super.dismissAllowingStateLoss();
             } else {
                 super.dismiss();
+            }
+            if (getDialog() instanceof IAnimDialog) {
+                ((IAnimDialog) getDialog()).setDismissByDf(false);
             }
             return;
         }
